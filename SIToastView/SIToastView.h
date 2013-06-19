@@ -12,7 +12,7 @@ extern NSString *const SIToastViewDidShowNotification;
 extern NSString *const SIToastViewWillDismissNotification;
 extern NSString *const SIToastViewDidDismissNotification;
 
-typedef NS_ENUM(NSInteger, SIToastViewGravity) {    
+typedef NS_ENUM(NSInteger, SIToastViewGravity) {
     SIToastViewGravityBottom = 0,
     SIToastViewGravityTop,
 };
@@ -47,15 +47,20 @@ typedef void(^SIToastViewHandler)(SIToastView *toastView);
 
 + (SIToastView *)showToastWithMessage:(NSString *)message;
 + (SIToastView *)showToastWithMessage:(NSString *)message duration:(NSTimeInterval)duration;
++ (SIToastView *)showToastWithMessage:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity;
 + (SIToastView *)showToastWithActivityAndMessage:(NSString *)message;
 + (SIToastView *)showToastWithImage:(UIImage *)image message:(NSString *)message;
 + (SIToastView *)showToastWithImage:(UIImage *)image message:(NSString *)message duration:(NSTimeInterval)duration;
++ (SIToastView *)showToastWithImage:(UIImage *)image message:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity;
 
 - (void)showMessage:(NSString *)message;
 - (void)showMessage:(NSString *)message duration:(NSTimeInterval)duration;
+- (void)showMessage:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity;
 - (void)showActivityWithMessage:(NSString *)message;
+- (void)showActivityWithMessage:(NSString *)message gravity:(SIToastViewGravity)gravity;
 - (void)showImage:(UIImage *)image message:(NSString *)message;
 - (void)showImage:(UIImage *)image message:(NSString *)message duration:(NSTimeInterval)duration;
+- (void)showImage:(UIImage *)image message:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity;
 - (void)show;
 - (void)dismiss;
 

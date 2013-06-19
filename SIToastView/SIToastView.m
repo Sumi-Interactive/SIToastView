@@ -75,10 +75,24 @@ NSString *const SIToastViewDidDismissNotification = @"SIToastViewDidDismissNotif
     return view;
 }
 
++ (SIToastView *)showToastWithMessage:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity
+{
+    SIToastView *view = [[self alloc] init];
+    [view showMessage:message duration:duration gravity:gravity];
+    return view;
+}
+
 + (SIToastView *)showToastWithActivityAndMessage:(NSString *)message
 {
     SIToastView *view = [[self alloc] init];
     [view showActivityWithMessage:message];
+    return view;
+}
+
++ (SIToastView *)showToastWithActivityAndMessage:(NSString *)message gravity:(SIToastViewGravity)gravity
+{
+    SIToastView *view = [[self alloc] init];
+    [view showActivityWithMessage:message gravity:gravity];
     return view;
 }
 
@@ -93,6 +107,13 @@ NSString *const SIToastViewDidDismissNotification = @"SIToastViewDidDismissNotif
 {
     SIToastView *view = [[self alloc] init];
     [view showImage:image message:message duration:duration];
+    return view;
+}
+
++ (SIToastView *)showToastWithImage:(UIImage *)image message:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity
+{
+    SIToastView *view = [[self alloc] init];
+    [view showImage:image message:message duration:duration gravity:(SIToastViewGravity)gravity];
     return view;
 }
 
@@ -166,7 +187,9 @@ NSString *const SIToastViewDidDismissNotification = @"SIToastViewDidDismissNotif
         return;
     }
     _gravity = gravity;
-    [self setNeedsLayout];
+    if (self.isVisible) {
+        [self setNeedsLayout];
+    }
 }
 
 - (void)setOffset:(CGFloat)offset
@@ -175,7 +198,16 @@ NSString *const SIToastViewDidDismissNotification = @"SIToastViewDidDismissNotif
         return;
     }
     _offset = offset;
-    [self setNeedsLayout];
+    if (self.isVisible) {
+        [self setNeedsLayout];
+    }
+}
+
+#pragma mark - Getters
+
+- (BOOL)isVisible
+{
+    return self.toastWindow != nil;
 }
 
 #pragma mark - Public
@@ -200,6 +232,11 @@ NSString *const SIToastViewDidDismissNotification = @"SIToastViewDidDismissNotif
 
 - (void)showMessage:(NSString *)message duration:(NSTimeInterval)duration
 {
+    [self showMessage:message duration:duration gravity:SIToastViewGravityBottom];
+}
+
+- (void)showMessage:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity
+{
     if (self.isVisible) {
         return;
     }
@@ -208,11 +245,17 @@ NSString *const SIToastViewDidDismissNotification = @"SIToastViewDidDismissNotif
     self.duration = duration;
     self.showActivity = NO;
     self.image = nil;
+    self.gravity = gravity;
     
     [self show];
 }
 
 - (void)showActivityWithMessage:(NSString *)message
+{
+    [self showActivityWithMessage:message gravity:SIToastViewGravityBottom];
+}
+
+- (void)showActivityWithMessage:(NSString *)message gravity:(SIToastViewGravity)gravity
 {
     if (self.isVisible) {
         return;
@@ -222,6 +265,7 @@ NSString *const SIToastViewDidDismissNotification = @"SIToastViewDidDismissNotif
     self.duration = 0;
     self.showActivity = YES;
     self.image = nil;
+    self.gravity = gravity;
     
     [self show];
 }
@@ -233,6 +277,11 @@ NSString *const SIToastViewDidDismissNotification = @"SIToastViewDidDismissNotif
 
 - (void)showImage:(UIImage *)image message:(NSString *)message duration:(NSTimeInterval)duration
 {
+    [self showImage:image message:message duration:duration gravity:SIToastViewGravityBottom];
+}
+
+- (void)showImage:(UIImage *)image message:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity
+{
     if (self.isVisible) {
         return;
     }
@@ -241,12 +290,17 @@ NSString *const SIToastViewDidDismissNotification = @"SIToastViewDidDismissNotif
     self.duration = duration;
     self.showActivity = NO;
     self.image = image;
+    self.gravity = gravity;
     
     [self show];
 }
 
 - (void)dismiss
 {
+    if (!self.isVisible) {
+        return;
+    }
+    
     [self.timer invalidate];
     self.timer = nil;
     
@@ -327,15 +381,9 @@ NSString *const SIToastViewDidDismissNotification = @"SIToastViewDidDismissNotif
 
 #pragma mark - Private
 
-- (BOOL)isVisible
-{
-    return self.toastWindow != nil;
-}
-
 - (void)setup
 {
-//    self.gravity = 0;
-    self.offset = 10.0;
+    self.offset = 30.0;
     
     self.containerView = [[UIView alloc] initWithFrame:CGRectZero];
     self.containerView.backgroundColor = self.viewBackgroundColor;

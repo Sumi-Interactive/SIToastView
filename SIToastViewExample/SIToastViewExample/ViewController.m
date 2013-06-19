@@ -49,7 +49,7 @@
 //    });
 //    [SIToastView showToastWithMessage:@"Hello Sumi!" duration:3];
     
-//    [SIToastView showToastWithImage:[UIImage imageNamed:@"checkmark"] message:@"Success Etiam porta sem malesuada magna mollis euismod. " duration:2];
+    [SIToastView showToastWithImage:[UIImage imageNamed:@"checkmark"] message:@"Success Etiam porta sem malesuada magna mollis euismod. " duration:2 gravity:SIToastViewGravityTop];
     
 //    SIToastView *toastView = [[SIToastView alloc] init];
 //    toastView.message = @"Etiam porta";
@@ -77,7 +77,7 @@
 
 - (IBAction)show2:(id)sender
 {
-    SIToastView *toastView = [SIToastView showToastWithMessage:@"Etiam porta sem malesuada." duration:1];
+    SIToastView *toastView = [SIToastView showToastWithMessage:@"Etiam porta sem malesuada." duration:1 gravity:SIToastViewGravityTop];
     toastView.offset = 50;
     
     SIToastView *toastView2 = [SIToastView showToastWithActivityAndMessage:@"Etiam"];
