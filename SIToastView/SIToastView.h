@@ -12,50 +12,45 @@ extern NSString *const SIToastViewDidShowNotification;
 extern NSString *const SIToastViewWillDismissNotification;
 extern NSString *const SIToastViewDidDismissNotification;
 
+@class SIToastView;
+typedef void(^SIToastViewHandler)(SIToastView *toastView);
+
 @interface SIToastView : UIView
 
 @property (nonatomic, strong) UIColor *viewBackgroundColor NS_AVAILABLE_IOS(5_0) UI_APPEARANCE_SELECTOR;
 @property (nonatomic, strong) UIColor *messageColor NS_AVAILABLE_IOS(5_0) UI_APPEARANCE_SELECTOR;
 @property (nonatomic, strong) UIFont *messageFont NS_AVAILABLE_IOS(5_0) UI_APPEARANCE_SELECTOR;
+@property (nonatomic, strong) UIColor *activityIndicatorColor NS_AVAILABLE_IOS(5_0) UI_APPEARANCE_SELECTOR;
 @property (nonatomic, assign) CGFloat cornerRadius NS_AVAILABLE_IOS(5_0) UI_APPEARANCE_SELECTOR;
 @property (nonatomic, assign) CGFloat shadowRadius NS_AVAILABLE_IOS(5_0) UI_APPEARANCE_SELECTOR;
 @property (nonatomic, assign) CGFloat shadowOpacity NS_AVAILABLE_IOS(5_0) UI_APPEARANCE_SELECTOR;
 
-//@property (nonatomic, assign) BOOL allowTapToDismiss;
-//@property (nonatomic, assign) NSUInteger gravity;
-//@property (nonatomic, assign) CGFloat offset;
-//@property (nonatomic, readonly, getter = isVisible) BOOL visible;
+@property (nonatomic, copy) NSString *message;
+@property (nonatomic, strong) UIImage *image;
+@property (nonatomic, assign) BOOL showActivity;
+@property (nonatomic, assign) NSTimeInterval duration;
 
-+ (void)showMessage:(NSString *)message;
-+ (void)showMessage:(NSString *)message duration:(NSTimeInterval)duration;
-+ (void)showActivityWithMessage:(NSString *)message;
-+ (void)showImage:(UIImage *)image message:(NSString *)message;
-+ (void)showImage:(UIImage *)image message:(NSString *)message duration:(NSTimeInterval)duration;
-+ (void)dismiss;
-//+ (void)setAllowTapToDismiss:(BOOL)allowTapToDimiss;
-//+ (BOOL)allowTapToDismiss;
-+ (void)setGravity:(NSUInteger)gravity;
-+ (NSUInteger)gravity;
-+ (void)setOffset:(CGFloat)offset;
-+ (CGFloat)offset;
-+ (BOOL)isVisible;
+@property (nonatomic, assign) NSUInteger gravity;
+@property (nonatomic, assign) CGFloat offset; // default is 10.0
+@property (nonatomic, readonly, getter = isVisible) BOOL visible;
 
-//- (void)showMessage:(NSString *)message inView:(UIView *)view;
-//- (void)showMessage:(NSString *)message duration:(NSTimeInterval)duration inView:(UIView *)view;
-//- (void)showActivityWithMessage:(NSString *)message inView:(UIView *)view;
-//- (void)showImage:(UIImage *)image message:(NSString *)message inView:(UIView *)view;
-//- (void)showImage:(UIImage *)image message:(NSString *)message duration:(NSTimeInterval)duration inView:(UIView *)view;
-//- (void)dismiss;
+@property (nonatomic, copy) SIToastViewHandler willShowHandler;
+@property (nonatomic, copy) SIToastViewHandler didShowHandler;
+@property (nonatomic, copy) SIToastViewHandler willDismissHandler;
+@property (nonatomic, copy) SIToastViewHandler didDismissHandler;
+
++ (SIToastView *)showToastWithMessage:(NSString *)message;
++ (SIToastView *)showToastWithMessage:(NSString *)message duration:(NSTimeInterval)duration;
++ (SIToastView *)showToastWithActivityAndMessage:(NSString *)message;
++ (SIToastView *)showToastWithImage:(UIImage *)image message:(NSString *)message;
++ (SIToastView *)showToastWithImage:(UIImage *)image message:(NSString *)message duration:(NSTimeInterval)duration;
+
+- (void)showMessage:(NSString *)message;
+- (void)showMessage:(NSString *)message duration:(NSTimeInterval)duration;
+- (void)showActivityWithMessage:(NSString *)message;
+- (void)showImage:(UIImage *)image message:(NSString *)message;
+- (void)showImage:(UIImage *)image message:(NSString *)message duration:(NSTimeInterval)duration;
+- (void)show;
+- (void)dismiss;
 
 @end
-
-//@interface UIView (SIToastView)
-//
-//- (void)showToastWithMessage:(NSString *)message;
-//- (void)showToastWithMessage:(NSString *)message duration:(NSTimeInterval)duration;
-//- (void)showToastWithActivityAndMessage:(NSString *)message;
-//- (void)showToastWithImage:(UIImage *)image message:(NSString *)message;
-//- (void)showToastWithImage:(UIImage *)image message:(NSString *)message duration:(NSTimeInterval)duration;
-//- (void)dismissToast;
-//
-//@end

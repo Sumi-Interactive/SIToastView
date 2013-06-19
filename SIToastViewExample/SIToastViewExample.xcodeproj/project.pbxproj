@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		7E4B633B176EF4DA00C93DF1 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E4B633A176EF4DA00C93DF1 /* QuartzCore.framework */; };
+		7E5DBCB11771B9E80004C9FE /* checkmark.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E5DBCAF1771B9E80004C9FE /* checkmark.png */; };
+		7E5DBCB21771B9E80004C9FE /* checkmark@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E5DBCB01771B9E80004C9FE /* checkmark@2x.png */; };
 		7E6A7B32176B27DA0082D730 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E6A7B31176B27DA0082D730 /* UIKit.framework */; };
 		7E6A7B34176B27DA0082D730 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E6A7B33176B27DA0082D730 /* Foundation.framework */; };
 		7E6A7B36176B27DA0082D730 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E6A7B35176B27DA0082D730 /* CoreGraphics.framework */; };
@@ -29,6 +31,8 @@
 
 /* Begin PBXFileReference section */
 		7E4B633A176EF4DA00C93DF1 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		7E5DBCAF1771B9E80004C9FE /* checkmark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = checkmark.png; sourceTree = "<group>"; };
+		7E5DBCB01771B9E80004C9FE /* checkmark@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "checkmark@2x.png"; sourceTree = "<group>"; };
 		7E6A7B2E176B27DA0082D730 /* SIToastViewExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SIToastViewExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7E6A7B31176B27DA0082D730 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		7E6A7B33176B27DA0082D730 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -69,6 +73,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		7E5DBCA61771A9770004C9FE /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				7E5DBCAF1771B9E80004C9FE /* checkmark.png */,
+				7E5DBCB01771B9E80004C9FE /* checkmark@2x.png */,
+			);
+			name = Images;
+			sourceTree = "<group>";
+		};
 		7E6A7B25176B27DA0082D730 = {
 			isa = PBXGroup;
 			children = (
@@ -101,6 +114,7 @@
 		7E6A7B37176B27DA0082D730 /* SIToastViewExample */ = {
 			isa = PBXGroup;
 			children = (
+				7E5DBCA61771A9770004C9FE /* Images */,
 				7E6A7B5F176B281A0082D730 /* Icons */,
 				7E6A7B61176B282E0082D730 /* UI */,
 				7E6A7B60176B28280082D730 /* Classes */,
@@ -226,6 +240,8 @@
 				7E6A7B5A176B280E0082D730 /* Icon@2x.png in Resources */,
 				7E6A7B5C176B28120082D730 /* Icon-72.png in Resources */,
 				7E6A7B5E176B28150082D730 /* Icon-72@2x.png in Resources */,
+				7E5DBCB11771B9E80004C9FE /* checkmark.png in Resources */,
+				7E5DBCB21771B9E80004C9FE /* checkmark@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

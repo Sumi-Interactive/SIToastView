@@ -10,9 +10,9 @@
 
 #define PADDING_HORIZONTAL 10
 #define PADDING_VERTICAL 8
-#define MARGIN 5
+#define MARGIN 10
 #define GAP 10
-#define TRANSITION_DURATION 2
+#define TRANSITION_DURATION 0.4
 
 NSString *const SIToastViewWillShowNotification = @"SIToastViewWillShowNotification";
 NSString *const SIToastViewDidShowNotification = @"SIToastViewDidShowNotification";
@@ -36,11 +36,6 @@ NSString *const SIToastViewDidDismissNotification = @"SIToastViewDidDismissNotif
 
 @interface SIToastView ()
 
-@property (nonatomic, assign) BOOL allowTapToDismiss;
-@property (nonatomic, assign) NSUInteger gravity;
-@property (nonatomic, assign) CGFloat offset;
-@property (nonatomic, readonly, getter = isVisible) BOOL visible;
-
 @property (nonatomic, strong) UIView *containerView;
 @property (nonatomic, strong) UILabel *messageLabel;
 @property (nonatomic, strong) UIImageView *imageView;
@@ -60,89 +55,143 @@ NSString *const SIToastViewDidDismissNotification = @"SIToastViewDidDismissNotif
     SIToastView *appearance = [self appearance];
     appearance.viewBackgroundColor = [UIColor whiteColor];
     appearance.messageColor = [UIColor darkGrayColor];
-    appearance.messageFont = [UIFont systemFontOfSize:15];
+    appearance.messageFont = [UIFont systemFontOfSize:16];
     appearance.cornerRadius = 2.0;
     appearance.shadowRadius = 3.0;
     appearance.shadowOpacity = 0.5;
 }
 
-+ (instancetype)sharedView
++ (SIToastView *)showToastWithMessage:(NSString *)message
 {
-    static dispatch_once_t pred;
-    static id instance = nil;
-    dispatch_once(&pred, ^{
-        instance = [[self alloc] init];
-        [instance setup];
-    });
-    return instance;
+    SIToastView *view = [[self alloc] init];
+    [view showMessage:message];
+    return view;
 }
 
-+ (void)showMessage:(NSString *)message
++ (SIToastView *)showToastWithMessage:(NSString *)message duration:(NSTimeInterval)duration
 {
-    [[self sharedView] showMessage:message];
+    SIToastView *view = [[self alloc] init];
+    [view showMessage:message duration:duration];
+    return view;
 }
 
-+ (void)showMessage:(NSString *)message duration:(NSTimeInterval)duration
++ (SIToastView *)showToastWithActivityAndMessage:(NSString *)message
 {
-    [[self sharedView] showMessage:message duration:duration];
+    SIToastView *view = [[self alloc] init];
+    [view showActivityWithMessage:message];
+    return view;
 }
 
-+ (void)showActivityWithMessage:(NSString *)message
++ (SIToastView *)showToastWithImage:(UIImage *)image message:(NSString *)message
 {
-    [[self sharedView] showActivityWithMessage:message];
+    SIToastView *view = [[self alloc] init];
+    [view showImage:image message:message];
+    return view;
 }
 
-+ (void)showImage:(UIImage *)image message:(NSString *)message
++ (SIToastView *)showToastWithImage:(UIImage *)image message:(NSString *)message duration:(NSTimeInterval)duration
 {
-    [[self sharedView] showImage:image message:message];
+    SIToastView *view = [[self alloc] init];
+    [view showImage:image message:message duration:duration];
+    return view;
 }
 
-+ (void)showImage:(UIImage *)image message:(NSString *)message duration:(NSTimeInterval)duration
+#pragma mark - Init
+
+- (id)init
 {
-    [[self sharedView] showImage:image message:message duration:duration];
+    self = [super init];
+    if (self) {
+        [self setup];
+    }
+    return self;
 }
 
-+ (void)dismiss
+#pragma mark - Setters
+
+- (void)setMessage:(NSString *)message
 {
-    [[self sharedView] dismiss];
+    if ([_message isEqualToString:message]) {
+        return;
+    }
+    _message = [message copy];
+    
+    if (self.isVisible) {
+        [self refresh];
+    }
 }
 
-+ (void)setAllowTapToDismiss:(BOOL)allowTapToDimiss
+- (void)setImage:(UIImage *)image
 {
-    [[self sharedView] setAllowTapToDismiss:allowTapToDimiss];
+    if (_image == image) {
+        return;
+    }
+    _image = image;
+    
+    if (self.isVisible) {
+        [self refresh];
+    }
 }
 
-+ (BOOL)allowTapToDismiss
+- (void)setShowActivity:(BOOL)showActivity
 {
-    return [[self sharedView] allowTapToDismiss];
+    if (_showActivity == showActivity) {
+        return;
+    }
+    _showActivity = showActivity;
+    
+    if (self.isVisible) {
+        [self refresh];
+    }
 }
 
-+ (void)setGravity:(NSUInteger)gravity
+- (void)setDuration:(NSTimeInterval)duration
 {
-    [[self sharedView] setGravity:gravity];
+    if (_duration == duration) {
+        return;
+    }
+    _duration = duration;
+    
+    if (self.isVisible) {
+        [self.timer invalidate];
+        if (_duration > 0) {
+            self.timer = [NSTimer scheduledTimerWithTimeInterval:_duration target:self selector:@selector(dismiss) userInfo:nil repeats:NO];
+        }
+    }
 }
 
-+ (NSUInteger)gravity
+- (void)setGravity:(NSUInteger)gravity
 {
-    return [[self sharedView] gravity];
+    if (_gravity == gravity) {
+        return;
+    }
+    _gravity = gravity;
+    [self setNeedsLayout];
 }
 
-+ (void)setOffset:(CGFloat)offset
+- (void)setOffset:(CGFloat)offset
 {
-    [[self sharedView] setOffset:offset];
-}
-
-+ (CGFloat)offset
-{
-    return [[self sharedView] offset];
-}
-
-+ (BOOL)isVisible
-{
-    return [[self sharedView] isVisible];
+    if (_offset == offset) {
+        return;
+    }
+    _offset = offset;
+    [self setNeedsLayout];
 }
 
 #pragma mark - Public
+
+- (void)show
+{
+    if (self.isVisible) {
+        return;
+    }
+    
+    [self refresh];
+    
+    [self setupWindow];
+    
+    [self transitionIn];
+}
 
 - (void)showMessage:(NSString *)message
 {
@@ -151,37 +200,30 @@ NSString *const SIToastViewDidDismissNotification = @"SIToastViewDidDismissNotif
 
 - (void)showMessage:(NSString *)message duration:(NSTimeInterval)duration
 {
-    [self tearDown];
-    
-    if (message) {
-        [self setupMessageLabel];
+    if (self.isVisible) {
+        return;
     }
     
-    self.messageLabel.text = message;
-    [self setNeedsLayout];
+    self.message = message;
+    self.duration = duration;
+    self.showActivity = NO;
+    self.image = nil;
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:SIToastViewWillShowNotification object:[self class] userInfo:nil];
-    
-    [self transitionIn];
-    
-    if (duration > 0) {
-        self.timer = [NSTimer scheduledTimerWithTimeInterval:duration + TRANSITION_DURATION target:self selector:@selector(dismiss) userInfo:nil repeats:NO];
-    }
+    [self show];
 }
 
 - (void)showActivityWithMessage:(NSString *)message
 {
-    [self tearDown];
-    
-    [self setupActivityIndicatorView];
-    if (message) {
-        [self setupMessageLabel];
+    if (self.isVisible) {
+        return;
     }
     
-    self.messageLabel.text = message;
-    [self setNeedsLayout];
+    self.message = message;
+    self.duration = 0;
+    self.showActivity = YES;
+    self.image = nil;
     
-    [self transitionIn];
+    [self show];
 }
 
 - (void)showImage:(UIImage *)image message:(NSString *)message
@@ -191,24 +233,16 @@ NSString *const SIToastViewDidDismissNotification = @"SIToastViewDidDismissNotif
 
 - (void)showImage:(UIImage *)image message:(NSString *)message duration:(NSTimeInterval)duration
 {
-    [self tearDown];
-    
-    if (image) {
-        [self setupImageView];
-    }
-    if (message) {
-        [self setupMessageLabel];
+    if (self.isVisible) {
+        return;
     }
     
-    self.imageView.image = image;
-    self.messageLabel.text = message;
-    [self setNeedsLayout];
+    self.message = message;
+    self.duration = duration;
+    self.showActivity = NO;
+    self.image = image;
     
-    [self transitionIn];
-    
-    if (duration > 0) {
-        self.timer = [NSTimer scheduledTimerWithTimeInterval:duration + TRANSITION_DURATION target:self selector:@selector(dismiss) userInfo:nil repeats:NO];
-    }
+    [self show];
 }
 
 - (void)dismiss
@@ -248,6 +282,9 @@ NSString *const SIToastViewDidDismissNotification = @"SIToastViewDidDismissNotif
                                             actualFontSize:&actualFontSize
                                                   forWidth:widthForMessageLabel
                                              lineBreakMode:NSLineBreakByTruncatingTail];
+        if (width > PADDING_HORIZONTAL * 2) {
+            width += GAP;
+        }
         width += size.width;
         contentHeight = MAX(size.height, contentHeight);
     }
@@ -268,6 +305,14 @@ NSString *const SIToastViewDidDismissNotification = @"SIToastViewDidDismissNotif
         frame.origin.y = round((size.height - self.activityIndicatorView.bounds.size.height) / 2);
         self.activityIndicatorView.frame = frame;
         left += self.activityIndicatorView.bounds.size.width + GAP;
+    }
+    
+    if (self.imageView) {
+        CGRect frame = self.imageView.frame;
+        frame.origin.x = left;
+        frame.origin.y = round((size.height - self.imageView.bounds.size.height) / 2);
+        self.imageView.frame = frame;
+        left += self.imageView.bounds.size.width + GAP;
     }
     
     if (self.messageLabel) {
@@ -304,22 +349,48 @@ NSString *const SIToastViewDidDismissNotification = @"SIToastViewDidDismissNotif
 
 - (void)tearDown
 {
-    [self.timer invalidate];
-    self.timer = nil;
+    [self.containerView.layer removeAllAnimations]; // cancel animations
+    
     [self.messageLabel removeFromSuperview];
     self.messageLabel = nil;
     [self.activityIndicatorView removeFromSuperview];
     self.activityIndicatorView = nil;
     [self.imageView removeFromSuperview];
     self.imageView = nil;
-    [self.containerView.layer removeAllAnimations]; // cancel animations
+    
+    [self.timer invalidate];
+    self.timer = nil;
+}
+
+- (void)refresh
+{
+    [self tearDown];
+    
+    if (self.message) {
+        [self setupMessageLabel];
+    }
+    self.messageLabel.text = self.message;
+    
+    if (self.showActivity) {
+        [self setupActivityIndicatorView];
+    } else {
+        if (self.image) {
+            [self setupImageView];
+            self.imageView.image = self.image;
+        }
+    }
+    
+    if (self.duration > 0) {
+        self.timer = [NSTimer scheduledTimerWithTimeInterval:self.duration + TRANSITION_DURATION target:self selector:@selector(dismiss) userInfo:nil repeats:NO];
+    }
+    
+    [self setNeedsLayout];
 }
 
 - (void)setupMessageLabel
 {
     self.messageLabel = [[UILabel alloc] initWithFrame:CGRectZero];
     self.messageLabel.backgroundColor = [UIColor clearColor];
-//    self.messageLabel.backgroundColor = [UIColor redColor];
     self.messageLabel.textColor = self.messageColor;
     self.messageLabel.font = self.messageFont;
     self.messageLabel.minimumScaleFactor = 0.7;
@@ -330,13 +401,14 @@ NSString *const SIToastViewDidDismissNotification = @"SIToastViewDidDismissNotif
 - (void)setupActivityIndicatorView
 {
     self.activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    self.activityIndicatorView.color = self.activityIndicatorColor;
     [self.containerView addSubview:self.activityIndicatorView];
     [self.activityIndicatorView startAnimating];
 }
 
 - (void)setupImageView
 {
-    self.imageView = [[UIImageView alloc] init];
+    self.imageView = [[UIImageView alloc] initWithImage:self.image];
     [self.containerView addSubview:self.imageView];
 }
 
@@ -359,13 +431,11 @@ NSString *const SIToastViewDidDismissNotification = @"SIToastViewDidDismissNotif
 
 - (void)transitionIn
 {
-    if (self.isVisible) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:SIToastViewDidShowNotification object:[self class] userInfo:nil];
-        return;
+    if (self.willShowHandler) {
+        self.willShowHandler(self);
     }
+    [[NSNotificationCenter defaultCenter] postNotificationName:SIToastViewWillShowNotification object:self userInfo:nil];
     
-    [self setupWindow];
-
     CGRect originalFrame = self.containerView.frame;
     CGRect rect = originalFrame;
     rect.origin.y = self.bounds.size.height;
@@ -375,36 +445,36 @@ NSString *const SIToastViewDidDismissNotification = @"SIToastViewDidDismissNotif
                          self.containerView.frame = originalFrame;
                      }
                      completion:^(BOOL finished) {
-                         [[NSNotificationCenter defaultCenter] postNotificationName:SIToastViewDidShowNotification object:[self class] userInfo:nil];
+                         if (self.didShowHandler) {
+                             self.didShowHandler(self);
+                         }
+                         [[NSNotificationCenter defaultCenter] postNotificationName:SIToastViewDidShowNotification object:self userInfo:nil];
                      }];
 }
 
 - (void)transitionOut
 {
-    if (!self.isVisible) {
-        return;
+    if (self.willDismissHandler) {
+        self.willDismissHandler(self);
     }
-    
-    [[NSNotificationCenter defaultCenter] postNotificationName:SIToastViewWillDismissNotification object:[self class] userInfo:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:SIToastViewWillDismissNotification object:self userInfo:nil];
     
     CGRect rect = self.containerView.frame;
-    rect.origin.y += (self.bounds.size.height - self.containerView.bounds.origin.y);
+    rect.origin.y = self.bounds.size.height;
     [UIView animateWithDuration:TRANSITION_DURATION
                      animations:^{
                          self.containerView.frame = rect;
                      }
                      completion:^(BOOL finished) {
-                         if (!finished) {
-                             [[NSNotificationCenter defaultCenter] postNotificationName:SIToastViewDidDismissNotification object:[self class] userInfo:nil];
-                             return;
+                         if (self.didDismissHandler) {
+                             self.didDismissHandler(self);
                          }
+                         [[NSNotificationCenter defaultCenter] postNotificationName:SIToastViewDidDismissNotification object:self userInfo:nil];
                          
                          [self.toastWindow removeFromSuperview];
                          self.toastWindow = nil;
                          
                          [self tearDown];
-                         
-                         [[NSNotificationCenter defaultCenter] postNotificationName:SIToastViewDidDismissNotification object:[self class] userInfo:nil];
                      }];
 }
 
@@ -436,6 +506,15 @@ NSString *const SIToastViewDidDismissNotification = @"SIToastViewDidDismissNotif
     _messageFont = messageFont;
     self.messageLabel.font = messageFont;
     [self setNeedsLayout];
+}
+
+- (void)setActivityIndicatorColor:(UIColor *)activityIndicatorColor
+{
+    if (_activityIndicatorColor == activityIndicatorColor) {
+        return;
+    }
+    _activityIndicatorColor = activityIndicatorColor;
+    self.activityIndicatorView.color = activityIndicatorColor;
 }
 
 - (void)setCornerRadius:(CGFloat)cornerRadius
