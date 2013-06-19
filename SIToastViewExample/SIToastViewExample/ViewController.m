@@ -49,11 +49,13 @@
 //    });
 //    [SIToastView showToastWithMessage:@"Hello Sumi!" duration:3];
     
-    [SIToastView showToastWithImage:[UIImage imageNamed:@"checkmark"] message:@"Success Etiam porta sem malesuada magna mollis euismod. " duration:2];
+//    [SIToastView showToastWithImage:[UIImage imageNamed:@"checkmark"] message:@"Success Etiam porta sem malesuada magna mollis euismod. " duration:2];
     
 //    SIToastView *toastView = [[SIToastView alloc] init];
 //    toastView.message = @"Etiam porta";
 //    toastView.showActivity = YES;
+//    toastView.gravity = SIToastViewGravityTop;
+//    toastView.offset = 30;
 //    toastView.duration = 2;
 //    toastView.willShowHandler = ^(SIToastView *toastView) {
 //        NSLog(@"willShowHandler, %@", toastView);
@@ -69,8 +71,8 @@
 //    };
 //    [toastView show];
     
-//    SIToastView *toastView = [SIToastView showToastWithMessage:@"Ni hao" duration:5];
-//    toastView.duration = 1;
+    SIToastView *toastView = [SIToastView showToastWithMessage:@"Ni hao" duration:5];
+    toastView.duration = 1;
 }
 
 - (IBAction)show2:(id)sender

@@ -12,6 +12,11 @@ extern NSString *const SIToastViewDidShowNotification;
 extern NSString *const SIToastViewWillDismissNotification;
 extern NSString *const SIToastViewDidDismissNotification;
 
+typedef NS_ENUM(NSInteger, SIToastViewGravity) {    
+    SIToastViewGravityBottom = 0,
+    SIToastViewGravityTop,
+};
+
 @class SIToastView;
 typedef void(^SIToastViewHandler)(SIToastView *toastView);
 
@@ -30,8 +35,9 @@ typedef void(^SIToastViewHandler)(SIToastView *toastView);
 @property (nonatomic, assign) BOOL showActivity;
 @property (nonatomic, assign) NSTimeInterval duration;
 
-@property (nonatomic, assign) NSUInteger gravity;
+@property (nonatomic, assign) SIToastViewGravity gravity; // default is SIToastViewGravityBottom
 @property (nonatomic, assign) CGFloat offset; // default is 10.0
+
 @property (nonatomic, readonly, getter = isVisible) BOOL visible;
 
 @property (nonatomic, copy) SIToastViewHandler willShowHandler;

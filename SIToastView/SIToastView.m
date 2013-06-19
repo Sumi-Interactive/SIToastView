@@ -160,7 +160,7 @@ NSString *const SIToastViewDidDismissNotification = @"SIToastViewDidDismissNotif
     }
 }
 
-- (void)setGravity:(NSUInteger)gravity
+- (void)setGravity:(SIToastViewGravity)gravity
 {
     if (_gravity == gravity) {
         return;
@@ -319,7 +319,9 @@ NSString *const SIToastViewDidDismissNotification = @"SIToastViewDidDismissNotif
         self.messageLabel.frame = CGRectMake(left, PADDING_VERTICAL, size.width - PADDING_HORIZONTAL - left, size.height - PADDING_VERTICAL * 2);
     }
     
-    self.containerView.frame = CGRectMake(round((self.bounds.size.width - size.width) / 2), self.bounds.size.height - size.height - self.offset - self.shadowRadius, size.width, size.height);
+    CGFloat x = round((self.bounds.size.width - size.width) / 2);
+    CGFloat y = self.gravity == SIToastViewGravityBottom ? (self.bounds.size.height - size.height - self.offset) : self.offset;
+    self.containerView.frame = CGRectMake(x, y, size.width, size.height);
     self.containerView.layer.shadowPath = [UIBezierPath bezierPathWithRoundedRect:self.containerView.bounds cornerRadius:self.cornerRadius].CGPath;
 }
 
@@ -438,7 +440,11 @@ NSString *const SIToastViewDidDismissNotification = @"SIToastViewDidDismissNotif
     
     CGRect originalFrame = self.containerView.frame;
     CGRect rect = originalFrame;
-    rect.origin.y = self.bounds.size.height;
+    if (self.gravity == SIToastViewGravityBottom) {
+        rect.origin.y = self.bounds.size.height;
+    } else {
+        rect.origin.y = -rect.size.height;
+    }
     self.containerView.frame = rect;
     [UIView animateWithDuration:TRANSITION_DURATION
                      animations:^{
@@ -460,7 +466,11 @@ NSString *const SIToastViewDidDismissNotification = @"SIToastViewDidDismissNotif
     [[NSNotificationCenter defaultCenter] postNotificationName:SIToastViewWillDismissNotification object:self userInfo:nil];
     
     CGRect rect = self.containerView.frame;
-    rect.origin.y = self.bounds.size.height;
+    if (self.gravity == SIToastViewGravityBottom) {
+        rect.origin.y = self.bounds.size.height;
+    } else {
+        rect.origin.y = -rect.size.height;
+    }
     [UIView animateWithDuration:TRANSITION_DURATION
                      animations:^{
                          self.containerView.frame = rect;
