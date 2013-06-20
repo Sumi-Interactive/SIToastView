@@ -20,6 +20,8 @@ NSString *const SIToastViewDidShowNotification = @"SIToastViewDidShowNotificatio
 NSString *const SIToastViewWillDismissNotification = @"SIToastViewWillDismissNotification";
 NSString *const SIToastViewDidDismissNotification = @"SIToastViewDidDismissNotification";
 
+static NSMutableArray *__si_visible_toast_views;
+
 @interface SIToastViewController : UIViewController
 
 @property (nonatomic, strong) SIToastView *toastView;
@@ -60,6 +62,8 @@ NSString *const SIToastViewDidDismissNotification = @"SIToastViewDidDismissNotif
     appearance.cornerRadius = 2.0;
     appearance.shadowRadius = 3.0;
     appearance.shadowOpacity = 0.5;
+    
+    __si_visible_toast_views = [NSMutableArray array];
 }
 
 + (SIToastView *)showToastWithMessage:(NSString *)message
@@ -137,6 +141,11 @@ NSString *const SIToastViewDidDismissNotification = @"SIToastViewDidDismissNotif
     SIToastView *view = [[self alloc] init];
     [view showImage:image message:message duration:duration gravity:gravity offset:offset];
     return view;
+}
+
++ (NSArray *)visibleToastViews
+{
+    return [__si_visible_toast_views copy];
 }
 
 #pragma mark - Init
@@ -252,6 +261,8 @@ NSString *const SIToastViewDidDismissNotification = @"SIToastViewDidDismissNotif
     [self refresh];
     
     [self setupWindow];
+    
+    [__si_visible_toast_views addObject:self];
     
     [self transitionIn];
 }
@@ -573,15 +584,19 @@ NSString *const SIToastViewDidDismissNotification = @"SIToastViewDidDismissNotif
                          self.containerView.frame = rect;
                      }
                      completion:^(BOOL finished) {
+                         [self.toastWindow removeFromSuperview];
+                         self.toastWindow = nil;
+                         
+                         [self tearDown];
+                         
+                         [__si_visible_toast_views removeObject:self];
+                         
                          if (self.didDismissHandler) {
                              self.didDismissHandler(self);
                          }
                          [[NSNotificationCenter defaultCenter] postNotificationName:SIToastViewDidDismissNotification object:self userInfo:nil];
                          
-                         [self.toastWindow removeFromSuperview];
-                         self.toastWindow = nil;
                          
-                         [self tearDown];
                      }];
 }
 

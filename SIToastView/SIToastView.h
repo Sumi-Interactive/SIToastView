@@ -59,6 +59,8 @@ typedef void(^SIToastViewHandler)(SIToastView *toastView);
 + (SIToastView *)showToastWithImage:(UIImage *)image message:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity;
 + (SIToastView *)showToastWithImage:(UIImage *)image message:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity offset:(CGFloat)offset;
 
++ (NSArray *)visibleToastViews;
+
 - (void)showMessage:(NSString *)message;
 - (void)showMessage:(NSString *)message duration:(NSTimeInterval)duration;
 - (void)showMessage:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity;

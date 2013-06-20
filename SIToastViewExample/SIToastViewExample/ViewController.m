@@ -11,6 +11,8 @@
 
 @interface ViewController ()
 
+@property (nonatomic, strong) SIToastView *aToastView;
+
 @end
 
 @implementation ViewController
@@ -27,10 +29,10 @@
 //    [[SIToastView appearance] setViewBackgroundColor:[UIColor darkGrayColor]];
 //    [[SIToastView appearance] setMessageColor:[UIColor whiteColor]];
 	
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willShowHandler:) name:SIToastViewWillShowNotification object:nil];
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didShowHandler:) name:SIToastViewDidShowNotification object:nil];
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willDismissHandler:) name:SIToastViewWillDismissNotification object:nil];
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didDismissHandler:) name:SIToastViewDidDismissNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willShowHandler:) name:SIToastViewWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didShowHandler:) name:SIToastViewDidShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willDismissHandler:) name:SIToastViewWillDismissNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didDismissHandler:) name:SIToastViewDidDismissNotification object:nil];
 }
 
 - (void)didReceiveMemoryWarning
@@ -73,6 +75,8 @@
     
     SIToastView *toastView = [SIToastView showToastWithMessage:@"Ni hao" duration:5];
     toastView.duration = 1;
+    
+    
 }
 
 - (IBAction)show2:(id)sender
@@ -112,6 +116,8 @@
 - (void)didDismissHandler:(NSNotification *)notification
 {
     NSLog(@"%@, %@", NSStringFromSelector(_cmd), notification.object);
+    
+    NSLog(@"%@", [SIToastView visibleToastViews]);
 }
 
 @end
