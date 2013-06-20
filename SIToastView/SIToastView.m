@@ -13,6 +13,7 @@
 #define MARGIN 10
 #define GAP 10
 #define TRANSITION_DURATION 0.4
+#define DEFAULT_OFFSET 30.0
 
 NSString *const SIToastViewWillShowNotification = @"SIToastViewWillShowNotification";
 NSString *const SIToastViewDidShowNotification = @"SIToastViewDidShowNotification";
@@ -82,6 +83,13 @@ NSString *const SIToastViewDidDismissNotification = @"SIToastViewDidDismissNotif
     return view;
 }
 
++ (SIToastView *)showToastWithMessage:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity offset:(CGFloat)offset
+{
+    SIToastView *view = [[self alloc] init];
+    [view showMessage:message duration:duration gravity:gravity offset:offset];
+    return view;
+}
+
 + (SIToastView *)showToastWithActivityAndMessage:(NSString *)message
 {
     SIToastView *view = [[self alloc] init];
@@ -93,6 +101,13 @@ NSString *const SIToastViewDidDismissNotification = @"SIToastViewDidDismissNotif
 {
     SIToastView *view = [[self alloc] init];
     [view showActivityWithMessage:message gravity:gravity];
+    return view;
+}
+
++ (SIToastView *)showToastWithActivityAndMessage:(NSString *)message gravity:(SIToastViewGravity)gravity offset:(CGFloat)offset
+{
+    SIToastView *view = [[self alloc] init];
+    [view showActivityWithMessage:message gravity:gravity offset:offset];
     return view;
 }
 
@@ -113,7 +128,14 @@ NSString *const SIToastViewDidDismissNotification = @"SIToastViewDidDismissNotif
 + (SIToastView *)showToastWithImage:(UIImage *)image message:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity
 {
     SIToastView *view = [[self alloc] init];
-    [view showImage:image message:message duration:duration gravity:(SIToastViewGravity)gravity];
+    [view showImage:image message:message duration:duration gravity:gravity];
+    return view;
+}
+
++ (SIToastView *)showToastWithImage:(UIImage *)image message:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity offset:(CGFloat)offset
+{
+    SIToastView *view = [[self alloc] init];
+    [view showImage:image message:message duration:duration gravity:gravity offset:offset];
     return view;
 }
 
@@ -237,6 +259,11 @@ NSString *const SIToastViewDidDismissNotification = @"SIToastViewDidDismissNotif
 
 - (void)showMessage:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity
 {
+    [self showMessage:message duration:duration gravity:gravity offset:DEFAULT_OFFSET];
+}
+
+- (void)showMessage:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity offset:(CGFloat)offset
+{
     if (self.isVisible) {
         return;
     }
@@ -246,6 +273,7 @@ NSString *const SIToastViewDidDismissNotification = @"SIToastViewDidDismissNotif
     self.showActivity = NO;
     self.image = nil;
     self.gravity = gravity;
+    self.offset = offset;
     
     [self show];
 }
@@ -257,6 +285,11 @@ NSString *const SIToastViewDidDismissNotification = @"SIToastViewDidDismissNotif
 
 - (void)showActivityWithMessage:(NSString *)message gravity:(SIToastViewGravity)gravity
 {
+    [self showActivityWithMessage:message gravity:gravity offset:DEFAULT_OFFSET];
+}
+
+- (void)showActivityWithMessage:(NSString *)message gravity:(SIToastViewGravity)gravity offset:(CGFloat)offset
+{
     if (self.isVisible) {
         return;
     }
@@ -266,6 +299,7 @@ NSString *const SIToastViewDidDismissNotification = @"SIToastViewDidDismissNotif
     self.showActivity = YES;
     self.image = nil;
     self.gravity = gravity;
+    self.offset = offset;
     
     [self show];
 }
@@ -282,6 +316,11 @@ NSString *const SIToastViewDidDismissNotification = @"SIToastViewDidDismissNotif
 
 - (void)showImage:(UIImage *)image message:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity
 {
+    [self showImage:image message:message duration:duration gravity:gravity offset:DEFAULT_OFFSET];
+}
+
+- (void)showImage:(UIImage *)image message:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity offset:(CGFloat)offset
+{
     if (self.isVisible) {
         return;
     }
@@ -291,6 +330,7 @@ NSString *const SIToastViewDidDismissNotification = @"SIToastViewDidDismissNotif
     self.showActivity = NO;
     self.image = image;
     self.gravity = gravity;
+    self.offset = offset;
     
     [self show];
 }
@@ -383,7 +423,7 @@ NSString *const SIToastViewDidDismissNotification = @"SIToastViewDidDismissNotif
 
 - (void)setup
 {
-    self.offset = 30.0;
+    self.offset = DEFAULT_OFFSET;
     
     self.containerView = [[UIView alloc] initWithFrame:CGRectZero];
     self.containerView.backgroundColor = self.viewBackgroundColor;

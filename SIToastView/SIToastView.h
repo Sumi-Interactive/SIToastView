@@ -36,7 +36,7 @@ typedef void(^SIToastViewHandler)(SIToastView *toastView);
 @property (nonatomic, assign) NSTimeInterval duration;
 
 @property (nonatomic, assign) SIToastViewGravity gravity; // default is SIToastViewGravityBottom
-@property (nonatomic, assign) CGFloat offset; // default is 10.0
+@property (nonatomic, assign) CGFloat offset; // default is 30.0
 
 @property (nonatomic, readonly, getter = isVisible) BOOL visible;
 
@@ -48,19 +48,31 @@ typedef void(^SIToastViewHandler)(SIToastView *toastView);
 + (SIToastView *)showToastWithMessage:(NSString *)message;
 + (SIToastView *)showToastWithMessage:(NSString *)message duration:(NSTimeInterval)duration;
 + (SIToastView *)showToastWithMessage:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity;
++ (SIToastView *)showToastWithMessage:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity offset:(CGFloat)offset;
+
 + (SIToastView *)showToastWithActivityAndMessage:(NSString *)message;
++ (SIToastView *)showToastWithActivityAndMessage:(NSString *)message gravity:(SIToastViewGravity)gravity;
++ (SIToastView *)showToastWithActivityAndMessage:(NSString *)message gravity:(SIToastViewGravity)gravity offset:(CGFloat)offset;
+
 + (SIToastView *)showToastWithImage:(UIImage *)image message:(NSString *)message;
 + (SIToastView *)showToastWithImage:(UIImage *)image message:(NSString *)message duration:(NSTimeInterval)duration;
 + (SIToastView *)showToastWithImage:(UIImage *)image message:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity;
++ (SIToastView *)showToastWithImage:(UIImage *)image message:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity offset:(CGFloat)offset;
 
 - (void)showMessage:(NSString *)message;
 - (void)showMessage:(NSString *)message duration:(NSTimeInterval)duration;
 - (void)showMessage:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity;
+- (void)showMessage:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity offset:(CGFloat)offset;
+
 - (void)showActivityWithMessage:(NSString *)message;
 - (void)showActivityWithMessage:(NSString *)message gravity:(SIToastViewGravity)gravity;
+- (void)showActivityWithMessage:(NSString *)message gravity:(SIToastViewGravity)gravity offset:(CGFloat)offset;
+
 - (void)showImage:(UIImage *)image message:(NSString *)message;
 - (void)showImage:(UIImage *)image message:(NSString *)message duration:(NSTimeInterval)duration;
 - (void)showImage:(UIImage *)image message:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity;
+- (void)showImage:(UIImage *)image message:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity offset:(CGFloat)offset;
+
 - (void)show;
 - (void)dismiss;
 

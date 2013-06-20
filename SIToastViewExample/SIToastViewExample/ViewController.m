@@ -49,7 +49,7 @@
 //    });
 //    [SIToastView showToastWithMessage:@"Hello Sumi!" duration:3];
     
-    [SIToastView showToastWithImage:[UIImage imageNamed:@"checkmark"] message:@"Success Etiam porta sem malesuada magna mollis euismod. " duration:2 gravity:SIToastViewGravityTop];
+    [SIToastView showToastWithImage:[UIImage imageNamed:@"checkmark"] message:@"Success Etiam porta sem malesuada magna mollis euismod. " duration:2 gravity:SIToastViewGravityTop offset:50];
     
 //    SIToastView *toastView = [[SIToastView alloc] init];
 //    toastView.message = @"Etiam porta";
