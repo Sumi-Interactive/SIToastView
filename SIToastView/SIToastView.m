@@ -148,6 +148,11 @@ static NSMutableArray *__si_visible_toast_views;
     return [__si_visible_toast_views copy];
 }
 
++ (BOOL)isShowingToastView
+{
+    return __si_visible_toast_views.count > 0;
+}
+
 #pragma mark - Init
 
 - (id)init
