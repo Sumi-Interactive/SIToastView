@@ -150,6 +150,15 @@ NSString *const SIToastViewDidDismissNotification = @"SIToastViewDidDismissNotif
     return self;
 }
 
+- (id)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        [self setup];
+    }
+    return self;
+}
+
 #pragma mark - Setters
 
 - (void)setMessage:(NSString *)message
