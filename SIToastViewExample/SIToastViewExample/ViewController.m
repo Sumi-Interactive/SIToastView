@@ -51,7 +51,7 @@
 //    });
 //    [SIToastView showToastWithMessage:@"Hello Sumi!" duration:3];
     
-    [SIToastView showToastWithImage:[UIImage imageNamed:@"checkmark"] message:@"Success Etiam porta sem malesuada magna mollis euismod. " duration:2 gravity:SIToastViewGravityTop offset:50];
+//    [SIToastView showToastWithImage:[UIImage imageNamed:@"checkmark"] message:@"Success Etiam porta sem malesuada magna mollis euismod. " duration:2 gravity:SIToastViewGravityTop offset:50];
     
 //    SIToastView *toastView = [[SIToastView alloc] init];
 //    toastView.message = @"Etiam porta";
@@ -73,10 +73,15 @@
 //    };
 //    [toastView show];
     
-    SIToastView *toastView = [SIToastView showToastWithMessage:@"Ni hao" duration:5];
-    toastView.duration = 1;
+//    SIToastView *toastView = [SIToastView showToastWithMessage:@"Ni hao" duration:5];
+//    toastView.duration = 1;
     
-    
+    SIToastView *toastView = [SIToastView showToastWithMessage:@"text 1"];
+    toastView.didDismissHandler = ^(SIToastView *myToastView) {
+        [myToastView showMessage:@"text 3" duration:2];
+        myToastView.didDismissHandler = nil;
+    };
+    [toastView showMessage:@"text 2" duration:2 gravity:SIToastViewGravityTop];
 }
 
 - (IBAction)show2:(id)sender

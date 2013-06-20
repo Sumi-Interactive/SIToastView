@@ -254,17 +254,13 @@ static NSMutableArray *__si_visible_toast_views;
 
 - (void)show
 {
-    if (self.isVisible) {
-        return;
-    }
-    
     [self refresh];
     
-    [self setupWindow];
-    
-    [__si_visible_toast_views addObject:self];
-    
-    [self transitionIn];
+    if (!self.isVisible) {
+        [self setupWindow];
+        [__si_visible_toast_views addObject:self];
+        [self transitionIn];
+    }
 }
 
 - (void)showMessage:(NSString *)message
@@ -284,16 +280,12 @@ static NSMutableArray *__si_visible_toast_views;
 
 - (void)showMessage:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity offset:(CGFloat)offset
 {
-    if (self.isVisible) {
-        return;
-    }
-    
-    self.message = message;
-    self.duration = duration;
-    self.showActivity = NO;
-    self.image = nil;
-    self.gravity = gravity;
-    self.offset = offset;
+    _message = message;
+    _duration = duration;
+    _showActivity = NO;
+    _image = nil;
+    _gravity = gravity;
+    _offset = offset;
     
     [self show];
 }
@@ -310,16 +302,12 @@ static NSMutableArray *__si_visible_toast_views;
 
 - (void)showActivityWithMessage:(NSString *)message gravity:(SIToastViewGravity)gravity offset:(CGFloat)offset
 {
-    if (self.isVisible) {
-        return;
-    }
-    
-    self.message = message;
-    self.duration = 0;
-    self.showActivity = YES;
-    self.image = nil;
-    self.gravity = gravity;
-    self.offset = offset;
+    _message = message;
+    _duration = 0;
+    _showActivity = YES;
+    _image = nil;
+    _gravity = gravity;
+    _offset = offset;
     
     [self show];
 }
@@ -341,16 +329,12 @@ static NSMutableArray *__si_visible_toast_views;
 
 - (void)showImage:(UIImage *)image message:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity offset:(CGFloat)offset
 {
-    if (self.isVisible) {
-        return;
-    }
-    
-    self.message = message;
-    self.duration = duration;
-    self.showActivity = NO;
-    self.image = image;
-    self.gravity = gravity;
-    self.offset = offset;
+    _message = message;
+    _duration = duration;
+    _showActivity = NO;
+    _image = image;
+    _gravity = gravity;
+    _offset = offset;
     
     [self show];
 }
