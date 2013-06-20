@@ -66,6 +66,12 @@ static NSMutableArray *__si_visible_toast_views;
     __si_visible_toast_views = [NSMutableArray array];
 }
 
++ (SIToastView *)toastView
+{
+    SIToastView *view = [[self alloc] init];
+    return view;
+}
+
 + (SIToastView *)showToastWithMessage:(NSString *)message
 {
     SIToastView *view = [[self alloc] init];

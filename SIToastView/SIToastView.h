@@ -45,6 +45,8 @@ typedef void(^SIToastViewHandler)(SIToastView *toastView);
 @property (nonatomic, copy) SIToastViewHandler willDismissHandler;
 @property (nonatomic, copy) SIToastViewHandler didDismissHandler;
 
++ (SIToastView *)toastView;
+
 + (SIToastView *)showToastWithMessage:(NSString *)message;
 + (SIToastView *)showToastWithMessage:(NSString *)message duration:(NSTimeInterval)duration;
 + (SIToastView *)showToastWithMessage:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity;
