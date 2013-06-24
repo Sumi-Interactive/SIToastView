@@ -526,7 +526,7 @@ static NSMutableArray *__si_visible_toast_views;
     UIWindow *window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     window.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     window.opaque = NO;
-    window.windowLevel = UIWindowLevelAlert;
+    window.windowLevel = UIWindowLevelStatusBar + [UIApplication sharedApplication].windows.count;
     window.userInteractionEnabled = NO;
     window.rootViewController = viewController;
     self.toastWindow = window;
