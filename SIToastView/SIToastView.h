@@ -32,7 +32,7 @@ typedef void(^SIToastViewHandler)(SIToastView *toastView);
 
 @property (nonatomic, copy) NSString *message;
 @property (nonatomic, strong) UIImage *image;
-@property (nonatomic, assign) BOOL showActivity;
+@property (nonatomic, assign) BOOL showsActivity;
 @property (nonatomic, assign) NSTimeInterval duration;
 
 @property (nonatomic, assign) SIToastViewGravity gravity; // default is SIToastViewGravityBottom

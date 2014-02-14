@@ -27,6 +27,8 @@
 		7E6A7B5C176B28120082D730 /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E6A7B5B176B28120082D730 /* Icon-72.png */; };
 		7E6A7B5E176B28150082D730 /* Icon-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E6A7B5D176B28150082D730 /* Icon-72@2x.png */; };
 		7E6A7B67176B28970082D730 /* SIToastView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E6A7B66176B28970082D730 /* SIToastView.m */; };
+		7EEEF667182E2AA500170E3A /* UIWindow+SIUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EEEF666182E2AA500170E3A /* UIWindow+SIUtils.m */; };
+		7EEEF66A182E2AFF00170E3A /* SISecondaryWindowRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EEEF669182E2AFF00170E3A /* SISecondaryWindowRootViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -56,6 +58,10 @@
 		7E6A7B5D176B28150082D730 /* Icon-72@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72@2x.png"; sourceTree = "<group>"; };
 		7E6A7B65176B28970082D730 /* SIToastView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SIToastView.h; sourceTree = "<group>"; };
 		7E6A7B66176B28970082D730 /* SIToastView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SIToastView.m; sourceTree = "<group>"; };
+		7EEEF665182E2AA500170E3A /* UIWindow+SIUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIWindow+SIUtils.h"; sourceTree = "<group>"; };
+		7EEEF666182E2AA500170E3A /* UIWindow+SIUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIWindow+SIUtils.m"; sourceTree = "<group>"; };
+		7EEEF668182E2AFF00170E3A /* SISecondaryWindowRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SISecondaryWindowRootViewController.h; sourceTree = "<group>"; };
+		7EEEF669182E2AFF00170E3A /* SISecondaryWindowRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SISecondaryWindowRootViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -174,6 +180,10 @@
 			children = (
 				7E6A7B65176B28970082D730 /* SIToastView.h */,
 				7E6A7B66176B28970082D730 /* SIToastView.m */,
+				7EEEF665182E2AA500170E3A /* UIWindow+SIUtils.h */,
+				7EEEF666182E2AA500170E3A /* UIWindow+SIUtils.m */,
+				7EEEF668182E2AFF00170E3A /* SISecondaryWindowRootViewController.h */,
+				7EEEF669182E2AFF00170E3A /* SISecondaryWindowRootViewController.m */,
 			);
 			name = SIToastView;
 			path = ../SIToastView;
@@ -255,7 +265,9 @@
 				7E6A7B3E176B27DA0082D730 /* main.m in Sources */,
 				7E6A7B42176B27DA0082D730 /* AppDelegate.m in Sources */,
 				7E6A7B51176B27DA0082D730 /* ViewController.m in Sources */,
+				7EEEF66A182E2AFF00170E3A /* SISecondaryWindowRootViewController.m in Sources */,
 				7E6A7B67176B28970082D730 /* SIToastView.m in Sources */,
+				7EEEF667182E2AA500170E3A /* UIWindow+SIUtils.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

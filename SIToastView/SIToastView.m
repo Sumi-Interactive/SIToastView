@@ -6,6 +6,7 @@
 //
 
 #import "SIToastView.h"
+#import "SISecondaryWindowRootViewController.h"
 #import <QuartzCore/QuartzCore.h>
 
 #define PADDING_HORIZONTAL 10
@@ -22,7 +23,7 @@ NSString *const SIToastViewDidDismissNotification = @"SIToastViewDidDismissNotif
 
 static NSMutableArray *__si_visible_toast_views;
 
-@interface SIToastViewController : UIViewController
+@interface SIToastViewController : SISecondaryWindowRootViewController
 
 @property (nonatomic, strong) SIToastView *toastView;
 
@@ -205,12 +206,12 @@ static NSMutableArray *__si_visible_toast_views;
     }
 }
 
-- (void)setShowActivity:(BOOL)showActivity
+- (void)setShowsActivity:(BOOL)showActivity
 {
-    if (_showActivity == showActivity) {
+    if (_showsActivity == showActivity) {
         return;
     }
-    _showActivity = showActivity;
+    _showsActivity = showActivity;
     
     if (self.isVisible) {
         [self refresh];
@@ -293,7 +294,7 @@ static NSMutableArray *__si_visible_toast_views;
 {
     _message = message;
     _duration = duration;
-    _showActivity = NO;
+    _showsActivity = NO;
     _image = nil;
     _gravity = gravity;
     _offset = offset;
@@ -315,7 +316,7 @@ static NSMutableArray *__si_visible_toast_views;
 {
     _message = message;
     _duration = 0;
-    _showActivity = YES;
+    _showsActivity = YES;
     _image = nil;
     _gravity = gravity;
     _offset = offset;
@@ -342,7 +343,7 @@ static NSMutableArray *__si_visible_toast_views;
 {
     _message = message;
     _duration = duration;
-    _showActivity = NO;
+    _showsActivity = NO;
     _image = image;
     _gravity = gravity;
     _offset = offset;
@@ -364,74 +365,67 @@ static NSMutableArray *__si_visible_toast_views;
 
 #pragma mark - Layout
 
-- (CGSize)preferredSizeForContainerView
-{
-    CGFloat width = PADDING_HORIZONTAL * 2;
-    CGFloat height = PADDING_VERTICAL * 2;
-    
-    CGFloat contentHeight;
-    
-    CGFloat widthForMessageLabel = self.bounds.size.width - PADDING_HORIZONTAL * 2 - MARGIN * 2;
-    if (self.activityIndicatorView) {
-        widthForMessageLabel -= self.activityIndicatorView.bounds.size.width + GAP;
-        width += self.activityIndicatorView.bounds.size.width;
-        contentHeight = self.activityIndicatorView.bounds.size.height;
-    }
-    
-    if (self.imageView) {
-        widthForMessageLabel -= self.imageView.bounds.size.width + GAP;
-        width += self.imageView.bounds.size.width;
-        contentHeight = MAX(self.imageView.bounds.size.height, contentHeight);
-    }
-    
-    if (self.messageLabel) {
-        CGFloat actualFontSize = self.messageLabel.font.pointSize;
-        CGSize size = [self.messageLabel.text sizeWithFont:self.messageLabel.font
-                                               minFontSize:self.messageLabel.font.pointSize * self.messageLabel.minimumScaleFactor
-                                            actualFontSize:&actualFontSize
-                                                  forWidth:widthForMessageLabel
-                                             lineBreakMode:NSLineBreakByTruncatingTail];
-        if (width > PADDING_HORIZONTAL * 2) {
-            width += GAP;
-        }
-        width += size.width;
-        contentHeight = MAX(size.height, contentHeight);
-    }
-    
-    height += contentHeight;
-    return CGSizeMake(width, height);
-}
-
 - (void)layoutSubviews
 {
-    CGSize size = [self preferredSizeForContainerView];
-    
     CGFloat left = PADDING_HORIZONTAL;
+    CGFloat height = 0;
     
     if (self.activityIndicatorView) {
-        CGRect frame = self.activityIndicatorView.frame;
-        frame.origin.x = left;
-        frame.origin.y = round((size.height - self.activityIndicatorView.bounds.size.height) / 2);
-        self.activityIndicatorView.frame = frame;
+        [self setX:left forView:self.activityIndicatorView];
         left += self.activityIndicatorView.bounds.size.width + GAP;
+        height = self.activityIndicatorView.bounds.size.height;
     }
     
     if (self.imageView) {
-        CGRect frame = self.imageView.frame;
-        frame.origin.x = left;
-        frame.origin.y = round((size.height - self.imageView.bounds.size.height) / 2);
-        self.imageView.frame = frame;
+        [self setX:left forView:self.imageView];
         left += self.imageView.bounds.size.width + GAP;
+        height = MAX(height, self.imageView.bounds.size.height);
     }
     
     if (self.messageLabel) {
-        self.messageLabel.frame = CGRectMake(left, PADDING_VERTICAL, size.width - PADDING_HORIZONTAL - left, size.height - PADDING_VERTICAL * 2);
+        CGFloat maxMessageWidth = self.bounds.size.width - MARGIN * 2;
+        maxMessageWidth -= left + PADDING_HORIZONTAL;
+        CGRect rect = self.messageLabel.frame;
+        rect.origin.x = left;
+        rect.size.width = maxMessageWidth;
+        self.messageLabel.frame = rect;
+        [self.messageLabel sizeToFit];
+        left += self.messageLabel.frame.size.width;
+        height = MAX(height, self.messageLabel.bounds.size.height);
     }
     
-    CGFloat x = round((self.bounds.size.width - size.width) / 2);
-    CGFloat y = self.gravity == SIToastViewGravityBottom ? (self.bounds.size.height - size.height - self.offset) : self.offset;
-    self.containerView.frame = CGRectMake(x, y, size.width, size.height);
+    CGFloat width = left + PADDING_HORIZONTAL;
+    height += PADDING_VERTICAL * 2;
+    
+    if (self.activityIndicatorView) {
+        [self setY:round((height - self.activityIndicatorView.bounds.size.height) / 2) forView:self.activityIndicatorView];
+    }
+    
+    if (self.imageView) {
+        [self setY:round((height - self.imageView.bounds.size.height) / 2) forView:self.imageView];
+    }
+    
+    if (self.messageLabel) {
+        [self setY:round((height - self.messageLabel.bounds.size.height) / 2) forView:self.messageLabel];
+    }
+    
+    CGFloat x = round((self.bounds.size.width - width) / 2);
+    CGFloat y = self.gravity == SIToastViewGravityBottom ? (self.bounds.size.height - height - self.offset) : self.offset;
+    self.containerView.frame = CGRectMake(x, y, width, height);
     self.containerView.layer.shadowPath = [UIBezierPath bezierPathWithRoundedRect:self.containerView.bounds cornerRadius:self.cornerRadius].CGPath;
+}
+
+- (void)setX:(CGFloat)x forView:(UIView *)view
+{
+    CGRect rect = view.frame;
+    rect.origin.x = x;
+    view.frame = rect;
+}
+- (void)setY:(CGFloat)y forView:(UIView *)view
+{
+    CGRect rect = view.frame;
+    rect.origin.y = y;
+    view.frame = rect;
 }
 
 #pragma mark - Private
@@ -446,10 +440,11 @@ static NSMutableArray *__si_visible_toast_views;
     self.containerView.layer.shadowRadius = self.shadowRadius;
     self.containerView.layer.shadowOpacity = self.shadowOpacity;
     self.containerView.layer.shadowOffset = CGSizeZero;
+    self.containerView.autoresizesSubviews = NO;
     [self addSubview:self.containerView];
     
-//    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapHandler:)];
-//    [self.containerView addGestureRecognizer:tap];
+    //    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapHandler:)];
+    //    [self.containerView addGestureRecognizer:tap];
 }
 
 - (void)tearDown
@@ -473,10 +468,10 @@ static NSMutableArray *__si_visible_toast_views;
     
     if (self.message) {
         [self setupMessageLabel];
+        self.messageLabel.text = self.message;
     }
-    self.messageLabel.text = self.message;
     
-    if (self.showActivity) {
+    if (self.showsActivity) {
         [self setupActivityIndicatorView];
     } else {
         if (self.image) {
@@ -498,8 +493,7 @@ static NSMutableArray *__si_visible_toast_views;
     self.messageLabel.backgroundColor = [UIColor clearColor];
     self.messageLabel.textColor = self.messageColor;
     self.messageLabel.font = self.messageFont;
-    self.messageLabel.minimumScaleFactor = 0.7;
-    self.messageLabel.adjustsFontSizeToFitWidth = YES;
+    self.messageLabel.numberOfLines = 0;
     [self.containerView addSubview:self.messageLabel];
 }
 
@@ -520,7 +514,7 @@ static NSMutableArray *__si_visible_toast_views;
 - (void)setupWindow
 {
     SIToastViewController *viewController = [[SIToastViewController alloc] init];
-    viewController.wantsFullScreenLayout = YES;
+    viewController.extendedLayoutIncludesOpaqueBars = YES;
     viewController.toastView = self;
     
     UIWindow *window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
@@ -531,7 +525,9 @@ static NSMutableArray *__si_visible_toast_views;
     window.rootViewController = viewController;
     self.toastWindow = window;
     
-    [self.toastWindow makeKeyAndVisible];
+//    UIWindow *oldKeyWindow = [UIApplication sharedApplication].keyWindow;
+    self.toastWindow.hidden = NO;
+//    [oldKeyWindow makeKeyWindow];
 }
 
 - (void)transitionIn

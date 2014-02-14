@@ -76,12 +76,14 @@
 //    SIToastView *toastView = [SIToastView showToastWithMessage:@"Ni hao" duration:5];
 //    toastView.duration = 1;
     
-    SIToastView *toastView = [SIToastView showToastWithMessage:@"text 1"];
-    toastView.didDismissHandler = ^(SIToastView *myToastView) {
-        [myToastView showMessage:@"text 3" duration:2];
-        myToastView.didDismissHandler = nil;
-    };
-    [toastView showMessage:@"text 2" duration:2 gravity:SIToastViewGravityTop];
+//    SIToastView *toastView = [SIToastView showToastWithMessage:@"Nullam quis risus eget urna mollis ornare vel eu leo."];
+//    toastView.didDismissHandler = ^(SIToastView *myToastView) {
+//        [myToastView showMessage:@"Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Vestibulum id ligula porta felis euismod semper. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Maecenas sed diam eget risus varius blandit sit amet non magna. Vestibulum id ligula porta felis euismod semper." duration:2];
+//        myToastView.didDismissHandler = nil;
+//    };
+//    [toastView showMessage:@"text 2" duration:2 gravity:SIToastViewGravityTop];
+    
+    [SIToastView showToastWithImage:[UIImage imageNamed:@"checkmark"] message:@"Job Done" duration:3];
 }
 
 - (IBAction)show2:(id)sender
