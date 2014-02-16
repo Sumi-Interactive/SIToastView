@@ -13,7 +13,7 @@
 #define PADDING_VERTICAL 8
 #define MARGIN 10
 #define GAP 10
-#define TRANSITION_DURATION 0.4
+#define TRANSITION_DURATION 0.3
 #define DEFAULT_OFFSET 30.0
 
 NSString *const SIToastViewWillShowNotification = @"SIToastViewWillShowNotification";
@@ -59,10 +59,8 @@ static NSMutableArray *__si_visible_toast_views;
     SIToastView *appearance = [self appearance];
     appearance.viewBackgroundColor = [UIColor whiteColor];
     appearance.messageColor = [UIColor darkGrayColor];
-    appearance.messageFont = [UIFont systemFontOfSize:16];
+    appearance.messageFont = [UIFont systemFontOfSize:[UIFont labelFontSize]];
     appearance.cornerRadius = 2.0;
-    appearance.shadowRadius = 3.0;
-    appearance.shadowOpacity = 0.5;
     
     __si_visible_toast_views = [NSMutableArray array];
 }
@@ -438,13 +436,10 @@ static NSMutableArray *__si_visible_toast_views;
     self.containerView.backgroundColor = self.viewBackgroundColor;
     self.containerView.layer.cornerRadius = self.cornerRadius;
     self.containerView.layer.shadowRadius = self.shadowRadius;
-    self.containerView.layer.shadowOpacity = self.shadowOpacity;
+    self.containerView.layer.shadowOpacity = self.shadowRadius > 0 ? 0.5 : 0;
     self.containerView.layer.shadowOffset = CGSizeZero;
     self.containerView.autoresizesSubviews = NO;
     [self addSubview:self.containerView];
-    
-    //    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapHandler:)];
-    //    [self.containerView addGestureRecognizer:tap];
 }
 
 - (void)tearDown
@@ -646,15 +641,7 @@ static NSMutableArray *__si_visible_toast_views;
     }
     _shadowRadius = shadowRadius;
     self.containerView.layer.shadowRadius = shadowRadius;
-}
-
-- (void)setShadowOpacity:(CGFloat)shadowOpacity
-{
-    if (_shadowOpacity == shadowOpacity) {
-        return;
-    }
-    _shadowOpacity = shadowOpacity;
-    self.containerView.layer.shadowOpacity = shadowOpacity;
+    self.containerView.layer.shadowOpacity = shadowRadius > 0 ? 0.5 : 0;
 }
 
 @end
