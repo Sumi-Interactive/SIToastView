@@ -15,6 +15,7 @@ extern NSString *const SIToastViewDidDismissNotification;
 typedef NS_ENUM(NSInteger, SIToastViewGravity) {
     SIToastViewGravityBottom = 0,
     SIToastViewGravityTop,
+    SIToastViewGravityNone
 };
 
 @class SIToastView;

@@ -365,22 +365,33 @@ static NSMutableArray *__si_visible_toast_views;
 
 - (void)layoutSubviews
 {
+    // skip transform layout
+    if (!CGAffineTransformEqualToTransform(self.containerView.transform, CGAffineTransformIdentity)) {
+        return;
+    }
+    
     CGFloat left = PADDING_HORIZONTAL;
     CGFloat height = 0;
     
     if (self.activityIndicatorView) {
         [self setX:left forView:self.activityIndicatorView];
-        left += self.activityIndicatorView.bounds.size.width + GAP;
+        left += self.activityIndicatorView.bounds.size.width;
         height = self.activityIndicatorView.bounds.size.height;
     }
     
     if (self.imageView) {
+        if (left > PADDING_HORIZONTAL) {
+            left += GAP;
+        }
         [self setX:left forView:self.imageView];
-        left += self.imageView.bounds.size.width + GAP;
+        left += self.imageView.bounds.size.width;
         height = MAX(height, self.imageView.bounds.size.height);
     }
     
     if (self.messageLabel) {
+        if (left > PADDING_HORIZONTAL) {
+            left += GAP;
+        }
         CGFloat maxMessageWidth = self.bounds.size.width - MARGIN * 2;
         maxMessageWidth -= left + PADDING_HORIZONTAL;
         CGRect rect = self.messageLabel.frame;
@@ -408,7 +419,18 @@ static NSMutableArray *__si_visible_toast_views;
     }
     
     CGFloat x = round((self.bounds.size.width - width) / 2);
-    CGFloat y = self.gravity == SIToastViewGravityBottom ? (self.bounds.size.height - height - self.offset) : self.offset;
+    CGFloat y = 0;
+    switch (self.gravity) {
+        case SIToastViewGravityTop:
+            y = self.offset;
+            break;
+        case SIToastViewGravityBottom:
+            y = self.bounds.size.height - height - self.offset;
+            break;
+        case SIToastViewGravityNone:
+            y = round_msg((self.bounds.size.height - height) / 2) + self.offset;
+            break;
+    }
     self.containerView.frame = CGRectMake(x, y, width, height);
     self.containerView.layer.shadowPath = [UIBezierPath bezierPathWithRoundedRect:self.containerView.bounds cornerRadius:self.cornerRadius].CGPath;
 }
@@ -532,24 +554,46 @@ static NSMutableArray *__si_visible_toast_views;
     }
     [[NSNotificationCenter defaultCenter] postNotificationName:SIToastViewWillShowNotification object:self userInfo:nil];
     
-    CGRect originalFrame = self.containerView.frame;
-    CGRect rect = originalFrame;
-    if (self.gravity == SIToastViewGravityBottom) {
-        rect.origin.y = self.bounds.size.height;
+    void (^completion)(BOOL finished) = ^(BOOL finished) {
+        if (self.didShowHandler) {
+            self.didShowHandler(self);
+        }
+        [[NSNotificationCenter defaultCenter] postNotificationName:SIToastViewDidShowNotification object:self userInfo:nil];
+    };
+    
+    if (self.gravity == SIToastViewGravityNone) {
+        self.containerView.alpha = 0;
+        self.containerView.transform = CGAffineTransformMakeScale(0.7, 0.7);
+        [UIView animateKeyframesWithDuration:TRANSITION_DURATION
+                                       delay:0
+                                     options:UIViewKeyframeAnimationOptionCalculationModeLinear
+                                  animations:^{
+                                      [UIView addKeyframeWithRelativeStartTime:0
+                                                              relativeDuration:0.8
+                                                                    animations:^{
+                                                                        self.containerView.transform = CGAffineTransformMakeScale(1.1, 1.1);
+                                                                        self.containerView.alpha = 1;
+                                                                    }];
+                                      [UIView addKeyframeWithRelativeStartTime:0.8
+                                                              relativeDuration:0.2
+                                                                    animations:^{
+                                                                        self.containerView.transform = CGAffineTransformIdentity;
+                                                                    }];
+                                  }
+                                  completion:completion];
     } else {
-        rect.origin.y = -rect.size.height;
-    }
-    self.containerView.frame = rect;
-    [UIView animateWithDuration:TRANSITION_DURATION
-                     animations:^{
-                         self.containerView.frame = originalFrame;
-                     }
-                     completion:^(BOOL finished) {
-                         if (self.didShowHandler) {
-                             self.didShowHandler(self);
+        CGRect originalFrame = self.containerView.frame;
+        if (self.gravity == SIToastViewGravityBottom) {
+            [self setY:self.bounds.size.height forView:self.containerView];
+        } else {
+            [self setY:-self.containerView.bounds.size.height forView:self.containerView];
+        }
+        [UIView animateWithDuration:TRANSITION_DURATION
+                         animations:^{
+                             self.containerView.frame = originalFrame;
                          }
-                         [[NSNotificationCenter defaultCenter] postNotificationName:SIToastViewDidShowNotification object:self userInfo:nil];
-                     }];
+                         completion:completion];
+    }
 }
 
 - (void)transitionOut
@@ -559,31 +603,49 @@ static NSMutableArray *__si_visible_toast_views;
     }
     [[NSNotificationCenter defaultCenter] postNotificationName:SIToastViewWillDismissNotification object:self userInfo:nil];
     
-    CGRect rect = self.containerView.frame;
-    if (self.gravity == SIToastViewGravityBottom) {
-        rect.origin.y = self.bounds.size.height;
+    void (^completion)(BOOL finished) = ^(BOOL finished) {
+        [self.toastWindow removeFromSuperview];
+        self.toastWindow = nil;
+        
+        [self tearDown];
+        
+        [__si_visible_toast_views removeObject:self];
+        
+        if (self.didDismissHandler) {
+            self.didDismissHandler(self);
+        }
+        [[NSNotificationCenter defaultCenter] postNotificationName:SIToastViewDidDismissNotification object:self userInfo:nil];
+    };
+    
+    if (self.gravity == SIToastViewGravityNone) {
+        [UIView animateKeyframesWithDuration:TRANSITION_DURATION
+                                       delay:0
+                                     options:UIViewKeyframeAnimationOptionCalculationModeLinear
+                                  animations:^{
+                                      [UIView addKeyframeWithRelativeStartTime:0
+                                                              relativeDuration:0.2
+                                                                    animations:^{
+                                                                        self.containerView.transform = CGAffineTransformMakeScale(1.1, 1.1);
+                                                                    }];
+                                      [UIView addKeyframeWithRelativeStartTime:0.2
+                                                              relativeDuration:0.8
+                                                                    animations:^{
+                                                                        self.containerView.transform = CGAffineTransformMakeScale(0.7, 0.7);
+                                                                        self.containerView.alpha = 0;
+                                                                    }];
+                                  }
+                                  completion:completion];
     } else {
-        rect.origin.y = -rect.size.height;
-    }
-    [UIView animateWithDuration:TRANSITION_DURATION
-                     animations:^{
-                         self.containerView.frame = rect;
-                     }
-                     completion:^(BOOL finished) {
-                         [self.toastWindow removeFromSuperview];
-                         self.toastWindow = nil;
-                         
-                         [self tearDown];
-                         
-                         [__si_visible_toast_views removeObject:self];
-                         
-                         if (self.didDismissHandler) {
-                             self.didDismissHandler(self);
+        [UIView animateWithDuration:TRANSITION_DURATION
+                         animations:^{
+                             if (self.gravity == SIToastViewGravityBottom) {
+                                 [self setY:self.bounds.size.height forView:self.containerView];
+                             } else {
+                                 [self setY:-self.containerView.bounds.size.height forView:self.containerView];
+                             }
                          }
-                         [[NSNotificationCenter defaultCenter] postNotificationName:SIToastViewDidDismissNotification object:self userInfo:nil];
-                         
-                         
-                     }];
+                         completion:completion];
+    }
 }
 
 #pragma mark - UIAppearance setters
