@@ -20,8 +20,23 @@ NSString *const SIToastViewWillShowNotification = @"SIToastViewWillShowNotificat
 NSString *const SIToastViewDidShowNotification = @"SIToastViewDidShowNotification";
 NSString *const SIToastViewWillDismissNotification = @"SIToastViewWillDismissNotification";
 NSString *const SIToastViewDidDismissNotification = @"SIToastViewDidDismissNotification";
+NSString *const SIToastViewDidTapNotification = @"SIToastViewDidTapNotification";
 
 static NSMutableArray *__si_visible_toast_views;
+
+@interface SIToastWindow : UIWindow
+
+@end
+
+@implementation SIToastWindow
+
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
+{
+    UIView *result = [super hitTest:point withEvent:event];
+    return [result isKindOfClass:[SIToastView class]] ? nil : result;
+}
+
+@end
 
 @interface SIToastViewController : SISecondaryWindowRootViewController
 
@@ -40,11 +55,12 @@ static NSMutableArray *__si_visible_toast_views;
 
 @interface SIToastView ()
 
+@property (nonatomic, strong) UIView *backgroundView;
 @property (nonatomic, strong) UIView *containerView;
 @property (nonatomic, strong) UILabel *messageLabel;
 @property (nonatomic, strong) UIImageView *imageView;
 @property (nonatomic, strong) UIActivityIndicatorView *activityIndicatorView;
-@property (nonatomic, strong) UIWindow *toastWindow;
+@property (nonatomic, strong) SIToastWindow *toastWindow;
 @property (nonatomic, strong) NSTimer *timer;
 
 @end
@@ -99,6 +115,13 @@ static NSMutableArray *__si_visible_toast_views;
     return view;
 }
 
++ (SIToastView *)showToastWithMessage:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity offset:(CGFloat)offset mask:(SIToastViewMask)mask
+{
+    SIToastView *view = [[self alloc] init];
+    [view showMessage:message duration:duration gravity:gravity offset:offset mask:mask];
+    return view;
+}
+
 + (SIToastView *)showToastWithActivityAndMessage:(NSString *)message
 {
     SIToastView *view = [[self alloc] init];
@@ -117,6 +140,13 @@ static NSMutableArray *__si_visible_toast_views;
 {
     SIToastView *view = [[self alloc] init];
     [view showActivityWithMessage:message gravity:gravity offset:offset];
+    return view;
+}
+
++ (SIToastView *)showToastWithActivityAndMessage:(NSString *)message gravity:(SIToastViewGravity)gravity offset:(CGFloat)offset mask:(SIToastViewMask)mask
+{
+    SIToastView *view = [[self alloc] init];
+    [view showActivityWithMessage:message gravity:gravity offset:offset mask:mask];
     return view;
 }
 
@@ -145,6 +175,13 @@ static NSMutableArray *__si_visible_toast_views;
 {
     SIToastView *view = [[self alloc] init];
     [view showImage:image message:message duration:duration gravity:gravity offset:offset];
+    return view;
+}
+
++ (SIToastView *)showToastWithImage:(UIImage *)image message:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity offset:(CGFloat)offset mask:(SIToastViewMask)mask
+{
+    SIToastView *view = [[self alloc] init];
+    [view showImage:image message:message duration:duration gravity:gravity offset:offset mask:mask];
     return view;
 }
 
@@ -290,12 +327,18 @@ static NSMutableArray *__si_visible_toast_views;
 
 - (void)showMessage:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity offset:(CGFloat)offset
 {
+    [self showMessage:message duration:duration gravity:gravity offset:offset mask:SIToastViewMaskNone];
+}
+
+- (void)showMessage:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity offset:(CGFloat)offset mask:(SIToastViewMask)mask
+{
     _message = message;
     _duration = duration;
     _showsActivity = NO;
     _image = nil;
     _gravity = gravity;
     _offset = offset;
+    _mask = mask;
     
     [self show];
 }
@@ -312,12 +355,18 @@ static NSMutableArray *__si_visible_toast_views;
 
 - (void)showActivityWithMessage:(NSString *)message gravity:(SIToastViewGravity)gravity offset:(CGFloat)offset
 {
+    [self showActivityWithMessage:message gravity:gravity offset:DEFAULT_OFFSET mask:SIToastViewMaskNone];
+}
+
+- (void)showActivityWithMessage:(NSString *)message gravity:(SIToastViewGravity)gravity offset:(CGFloat)offset mask:(SIToastViewMask)mask
+{
     _message = message;
     _duration = 0;
     _showsActivity = YES;
     _image = nil;
     _gravity = gravity;
     _offset = offset;
+    _mask = mask;
     
     [self show];
 }
@@ -339,12 +388,18 @@ static NSMutableArray *__si_visible_toast_views;
 
 - (void)showImage:(UIImage *)image message:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity offset:(CGFloat)offset
 {
+    [self showImage:image message:message duration:duration gravity:gravity offset:offset mask:SIToastViewMaskNone];
+}
+
+- (void)showImage:(UIImage *)image message:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity offset:(CGFloat)offset mask:(SIToastViewMask)mask
+{
     _message = message;
     _duration = duration;
     _showsActivity = NO;
     _image = image;
     _gravity = gravity;
     _offset = offset;
+    _mask = mask;
     
     [self show];
 }
@@ -433,6 +488,8 @@ static NSMutableArray *__si_visible_toast_views;
     }
     self.containerView.frame = CGRectMake(x, y, width, height);
     self.containerView.layer.shadowPath = [UIBezierPath bezierPathWithRoundedRect:self.containerView.bounds cornerRadius:self.cornerRadius].CGPath;
+    
+    self.backgroundView.frame = self.bounds;
 }
 
 - (void)setX:(CGFloat)x forView:(UIView *)view
@@ -453,6 +510,7 @@ static NSMutableArray *__si_visible_toast_views;
 - (void)setup
 {
     self.offset = DEFAULT_OFFSET;
+    self.autoresizesSubviews = NO;
     
     self.containerView = [[UIView alloc] initWithFrame:CGRectZero];
     self.containerView.backgroundColor = self.viewBackgroundColor;
@@ -462,12 +520,17 @@ static NSMutableArray *__si_visible_toast_views;
     self.containerView.layer.shadowOffset = CGSizeZero;
     self.containerView.autoresizesSubviews = NO;
     [self addSubview:self.containerView];
+    
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapAction:)];
+    [self.containerView addGestureRecognizer:tap];
 }
 
 - (void)tearDown
 {
     [self.containerView.layer removeAllAnimations]; // cancel animations
     
+    [self.backgroundView removeFromSuperview];
+    self.backgroundView = nil;
     [self.messageLabel removeFromSuperview];
     self.messageLabel = nil;
     [self.activityIndicatorView removeFromSuperview];
@@ -482,6 +545,10 @@ static NSMutableArray *__si_visible_toast_views;
 - (void)refresh
 {
     [self tearDown];
+    
+    if (self.mask != SIToastViewMaskNone) {
+        [self setupBackgroundView];
+    }
     
     if (self.message) {
         [self setupMessageLabel];
@@ -502,6 +569,13 @@ static NSMutableArray *__si_visible_toast_views;
     }
     
     [self setNeedsLayout];
+}
+
+- (void)setupBackgroundView
+{
+    self.backgroundView = [[UIView alloc] initWithFrame:self.bounds];
+    self.backgroundView.backgroundColor = (self.mask == SIToastViewMaskSolid) ? [UIColor colorWithWhite:0 alpha:0.6] : [UIColor clearColor];
+    [self insertSubview:self.backgroundView atIndex:0];
 }
 
 - (void)setupMessageLabel
@@ -534,11 +608,11 @@ static NSMutableArray *__si_visible_toast_views;
     viewController.extendedLayoutIncludesOpaqueBars = YES;
     viewController.toastView = self;
     
-    UIWindow *window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    UIWindow *window = [[SIToastWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     window.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     window.opaque = NO;
     window.windowLevel = UIWindowLevelStatusBar + [UIApplication sharedApplication].windows.count;
-    window.userInteractionEnabled = NO;
+//    window.userInteractionEnabled = NO;
     window.rootViewController = viewController;
     self.toastWindow = window;
     
@@ -594,6 +668,14 @@ static NSMutableArray *__si_visible_toast_views;
                          }
                          completion:completion];
     }
+    
+    if (self.mask == SIToastViewMaskSolid) {
+        self.backgroundView.alpha = 0;
+        [UIView animateWithDuration:TRANSITION_DURATION
+                         animations:^{
+                             self.backgroundView.alpha = 1;
+                         }];
+    }
 }
 
 - (void)transitionOut
@@ -646,6 +728,22 @@ static NSMutableArray *__si_visible_toast_views;
                          }
                          completion:completion];
     }
+    if (self.mask == SIToastViewMaskSolid) {
+        [UIView animateWithDuration:TRANSITION_DURATION
+                         animations:^{
+                             self.backgroundView.alpha = 0;
+                         }];
+    }
+}
+
+#pragma mark - Action
+
+- (void)tapAction:(UITapGestureRecognizer *)recognizer
+{
+    if (self.tapHandler) {
+        self.tapHandler(self);
+    }
+    [[NSNotificationCenter defaultCenter] postNotificationName:SIToastViewDidTapNotification object:self userInfo:nil];
 }
 
 #pragma mark - UIAppearance setters

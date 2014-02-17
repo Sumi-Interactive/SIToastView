@@ -83,7 +83,10 @@
 //    };
 //    [toastView showMessage:@"text 2" duration:2 gravity:SIToastViewGravityTop];
     
-    [SIToastView showToastWithImage:[UIImage imageNamed:@"checkmark"] message:@"Job Done" duration:3];
+    SIToastView *toastView = [SIToastView showToastWithImage:[UIImage imageNamed:@"checkmark"] message:@"Job Done" duration:3 gravity:SIToastViewGravityBottom offset:30 mask:SIToastViewMaskSolid];
+    toastView.tapHandler = ^(SIToastView *toastView) {
+        [toastView dismiss];
+    };
 }
 
 - (IBAction)show2:(id)sender
@@ -91,8 +94,8 @@
 //    SIToastView *toastView = [SIToastView showToastWithMessage:@"Etiam porta sem malesuada." duration:1 gravity:SIToastViewGravityTop];
 //    toastView.offset = 50;
     
-    SIToastView *toastView2 = [SIToastView showToastWithActivityAndMessage:@"Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor." gravity:SIToastViewGravityNone offset:0];
-    toastView2.activityIndicatorColor = [UIColor blueColor];
+    SIToastView *toastView2 = [SIToastView showToastWithActivityAndMessage:@"Vivamus sagittis lacus vel augue." gravity:SIToastViewGravityNone offset:0];
+//    toastView2.activityIndicatorColor = [UIColor blueColor];
     double delayInSeconds = 2.0;
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
     dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
