@@ -483,7 +483,7 @@ static NSMutableArray *__si_visible_toast_views;
             y = self.bounds.size.height - height - self.offset;
             break;
         case SIToastViewGravityNone:
-            y = round_msg((self.bounds.size.height - height) / 2) + self.offset;
+            y = round((self.bounds.size.height - height) / 2) + self.offset;
             break;
     }
     self.containerView.frame = CGRectMake(x, y, width, height);
