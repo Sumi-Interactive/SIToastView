@@ -36,6 +36,7 @@ typedef void(^SIToastViewHandler)(SIToastView *toastView);
 @property (nonatomic, strong) UIColor *activityIndicatorColor NS_AVAILABLE_IOS(5_0) UI_APPEARANCE_SELECTOR;
 @property (nonatomic, assign) CGFloat cornerRadius NS_AVAILABLE_IOS(5_0) UI_APPEARANCE_SELECTOR; // default is 2.0
 @property (nonatomic, assign) CGFloat shadowRadius NS_AVAILABLE_IOS(5_0) UI_APPEARANCE_SELECTOR; // default is 0.0
+@property (nonatomic, assign) CGFloat shadowOpacity NS_AVAILABLE_IOS(5_0) UI_APPEARANCE_SELECTOR; // default is 0.0
 
 @property (nonatomic, copy) NSString *message;
 @property (nonatomic, strong) UIImage *image;

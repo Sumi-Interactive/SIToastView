@@ -516,7 +516,7 @@ static NSMutableArray *__si_visible_toast_views;
     self.containerView.backgroundColor = self.viewBackgroundColor;
     self.containerView.layer.cornerRadius = self.cornerRadius;
     self.containerView.layer.shadowRadius = self.shadowRadius;
-    self.containerView.layer.shadowOpacity = self.shadowRadius > 0 ? 0.5 : 0;
+    self.containerView.layer.shadowOpacity = self.shadowOpacity;
     self.containerView.layer.shadowOffset = CGSizeZero;
     self.containerView.autoresizesSubviews = NO;
     [self addSubview:self.containerView];
@@ -801,7 +801,15 @@ static NSMutableArray *__si_visible_toast_views;
     }
     _shadowRadius = shadowRadius;
     self.containerView.layer.shadowRadius = shadowRadius;
-    self.containerView.layer.shadowOpacity = shadowRadius > 0 ? 0.5 : 0;
+}
+
+- (void)setShadowOpacity:(CGFloat)shadowOpacity
+{
+    if (_shadowOpacity == shadowOpacity) {
+        return;
+    }
+    _shadowOpacity = shadowOpacity;
+    self.containerView.layer.shadowOpacity = shadowOpacity;
 }
 
 @end
