@@ -9,10 +9,7 @@
 #import "SISecondaryWindowRootViewController.h"
 #import <QuartzCore/QuartzCore.h>
 
-#define PADDING_HORIZONTAL 10
-#define PADDING_VERTICAL 8
 #define MARGIN 10
-#define GAP 10
 #define TRANSITION_DURATION 0.3
 #define DEFAULT_OFFSET 30.0
 
@@ -425,7 +422,11 @@ static NSMutableArray *__si_visible_toast_views;
         return;
     }
     
-    CGFloat left = PADDING_HORIZONTAL;
+    CGFloat horizontalPadding = round(self.messageFont.lineHeight * 0.6);
+    CGFloat verticalPadding = round(horizontalPadding * 0.8);
+    CGFloat gap = horizontalPadding;
+    
+    CGFloat left = horizontalPadding;
     CGFloat height = 0;
     
     if (self.activityIndicatorView) {
@@ -435,8 +436,8 @@ static NSMutableArray *__si_visible_toast_views;
     }
     
     if (self.imageView) {
-        if (left > PADDING_HORIZONTAL) {
-            left += GAP;
+        if (left > horizontalPadding) {
+            left += gap;
         }
         [self setX:left forView:self.imageView];
         left += self.imageView.bounds.size.width;
@@ -444,11 +445,11 @@ static NSMutableArray *__si_visible_toast_views;
     }
     
     if (self.messageLabel) {
-        if (left > PADDING_HORIZONTAL) {
-            left += GAP;
+        if (left > horizontalPadding) {
+            left += gap;
         }
         CGFloat maxMessageWidth = self.bounds.size.width - MARGIN * 2;
-        maxMessageWidth -= left + PADDING_HORIZONTAL;
+        maxMessageWidth -= left + horizontalPadding;
         CGRect rect = self.messageLabel.frame;
         rect.origin.x = left;
         rect.size.width = maxMessageWidth;
@@ -458,8 +459,8 @@ static NSMutableArray *__si_visible_toast_views;
         height = MAX(height, self.messageLabel.bounds.size.height);
     }
     
-    CGFloat width = left + PADDING_HORIZONTAL;
-    height += PADDING_VERTICAL * 2;
+    CGFloat width = left + horizontalPadding;
+    height += verticalPadding * 2;
     
     if (self.activityIndicatorView) {
         [self setY:round((height - self.activityIndicatorView.bounds.size.height) / 2) forView:self.activityIndicatorView];
