@@ -119,6 +119,13 @@ static NSMutableArray *__si_visible_toast_views;
     return view;
 }
 
++ (instancetype)showToastWithMessage:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity offset:(CGFloat)offset mask:(SIToastViewMask)mask style:(SIToastViewStyle)style
+{
+    SIToastView *view = [[self alloc] init];
+    [view showMessage:message duration:duration gravity:gravity offset:offset mask:mask style:style];
+    return view;
+}
+
 + (SIToastView *)showToastWithActivityAndMessage:(NSString *)message
 {
     SIToastView *view = [[self alloc] init];
@@ -144,6 +151,13 @@ static NSMutableArray *__si_visible_toast_views;
 {
     SIToastView *view = [[self alloc] init];
     [view showActivityWithMessage:message gravity:gravity offset:offset mask:mask];
+    return view;
+}
+
++ (instancetype)showToastWithActivityAndMessage:(NSString *)message gravity:(SIToastViewGravity)gravity offset:(CGFloat)offset mask:(SIToastViewMask)mask style:(SIToastViewStyle)style
+{
+    SIToastView *view = [[self alloc] init];
+    [view showActivityWithMessage:message gravity:gravity offset:offset mask:mask style:style];
     return view;
 }
 
@@ -179,6 +193,13 @@ static NSMutableArray *__si_visible_toast_views;
 {
     SIToastView *view = [[self alloc] init];
     [view showImage:image message:message duration:duration gravity:gravity offset:offset mask:mask];
+    return view;
+}
+
++ (instancetype)showToastWithImage:(UIImage *)image message:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity offset:(CGFloat)offset mask:(SIToastViewMask)mask style:(SIToastViewStyle)style
+{
+    SIToastView *view = [[self alloc] init];
+    [view showImage:image message:message duration:duration gravity:gravity offset:offset mask:mask style:style];
     return view;
 }
 
@@ -276,6 +297,18 @@ static NSMutableArray *__si_visible_toast_views;
     }
 }
 
+- (void)setStyle:(SIToastViewStyle)style
+{
+    if (_style == style) {
+        return;
+    }
+    
+    _style = style;
+    if (self.isVisible) {
+        [self setNeedsLayout];
+    }
+}
+
 - (void)setOffset:(CGFloat)offset
 {
     if (_offset == offset) {
@@ -329,6 +362,11 @@ static NSMutableArray *__si_visible_toast_views;
 
 - (void)showMessage:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity offset:(CGFloat)offset mask:(SIToastViewMask)mask
 {
+    [self showMessage:message duration:duration gravity:gravity offset:offset mask:mask style:SIToastViewStyleDefault];
+}
+
+- (void)showMessage:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity offset:(CGFloat)offset mask:(SIToastViewMask)mask style:(SIToastViewStyle)style
+{
     _message = message;
     _duration = duration;
     _showsActivity = NO;
@@ -336,6 +374,7 @@ static NSMutableArray *__si_visible_toast_views;
     _gravity = gravity;
     _offset = offset;
     _mask = mask;
+    _style = style;
     
     [self show];
 }
@@ -357,6 +396,11 @@ static NSMutableArray *__si_visible_toast_views;
 
 - (void)showActivityWithMessage:(NSString *)message gravity:(SIToastViewGravity)gravity offset:(CGFloat)offset mask:(SIToastViewMask)mask
 {
+    [self showActivityWithMessage:message gravity:gravity offset:offset mask:mask style:SIToastViewStyleDefault];
+}
+
+- (void)showActivityWithMessage:(NSString *)message gravity:(SIToastViewGravity)gravity offset:(CGFloat)offset mask:(SIToastViewMask)mask style:(SIToastViewStyle)style
+{
     _message = message;
     _duration = 0;
     _showsActivity = YES;
@@ -364,6 +408,7 @@ static NSMutableArray *__si_visible_toast_views;
     _gravity = gravity;
     _offset = offset;
     _mask = mask;
+    _style = style;
     
     [self show];
 }
@@ -390,6 +435,11 @@ static NSMutableArray *__si_visible_toast_views;
 
 - (void)showImage:(UIImage *)image message:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity offset:(CGFloat)offset mask:(SIToastViewMask)mask
 {
+    [self showImage:image message:message duration:duration gravity:gravity offset:offset mask:mask style:SIToastViewStyleDefault];
+}
+
+- (void)showImage:(UIImage *)image message:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity offset:(CGFloat)offset mask:(SIToastViewMask)mask style:(SIToastViewStyle)style
+{
     _message = message;
     _duration = duration;
     _showsActivity = NO;
@@ -397,6 +447,7 @@ static NSMutableArray *__si_visible_toast_views;
     _gravity = gravity;
     _offset = offset;
     _mask = mask;
+    _style = style;
     
     [self show];
 }
@@ -455,12 +506,15 @@ static NSMutableArray *__si_visible_toast_views;
         rect.size.width = maxMessageWidth;
         self.messageLabel.frame = rect;
         [self.messageLabel sizeToFit];
+        if (self.style == SIToastViewStyleBanner) {
+            [self setWidth:maxMessageWidth + 2 * horizontalPadding forView:self.messageLabel];
+        }
         left += self.messageLabel.frame.size.width;
         height = MAX(height, self.messageLabel.bounds.size.height);
     }
     
     CGFloat width = left + horizontalPadding;
-    height += verticalPadding * 2;
+    height += verticalPadding * (self.style == SIToastViewStyleDefault ? 2 : 4);
     
     if (self.activityIndicatorView) {
         [self setY:round((height - self.activityIndicatorView.bounds.size.height) / 2) forView:self.activityIndicatorView];
@@ -474,8 +528,10 @@ static NSMutableArray *__si_visible_toast_views;
         [self setY:round((height - self.messageLabel.bounds.size.height) / 2) forView:self.messageLabel];
     }
     
-    CGFloat x = round((self.bounds.size.width - width) / 2);
-    CGFloat y = 0;
+    CGFloat x = 0, y = 0;
+    if (self.style == SIToastViewStyleDefault) {
+        x = round((self.bounds.size.width - width) / 2);
+    }
     switch (self.gravity) {
         case SIToastViewGravityTop:
             y = self.offset;
@@ -504,6 +560,18 @@ static NSMutableArray *__si_visible_toast_views;
     CGRect rect = view.frame;
     rect.origin.y = y;
     view.frame = rect;
+}
+
+- (void)setWidth:(CGFloat)width forView:(UIView *)view
+{
+    CGRect rect = view.frame;
+    rect.size.width = width;
+    view.frame = rect;
+}
+
+- (CGFloat)paddingVertical
+{
+    return self.style == SIToastViewStyleDefault ? 8 : 16;
 }
 
 #pragma mark - Private
@@ -615,7 +683,7 @@ static NSMutableArray *__si_visible_toast_views;
     window.windowLevel = UIWindowLevelStatusBar + [UIApplication sharedApplication].windows.count;
 //    window.userInteractionEnabled = NO;
     window.rootViewController = viewController;
-    self.toastWindow = window;
+    self.toastWindow = (SIToastWindow *)window;
     
 //    UIWindow *oldKeyWindow = [UIApplication sharedApplication].keyWindow;
     self.toastWindow.hidden = NO;

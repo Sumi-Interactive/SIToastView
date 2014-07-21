@@ -83,7 +83,7 @@
 //    };
 //    [toastView showMessage:@"text 2" duration:2 gravity:SIToastViewGravityTop];
     
-    SIToastView *toastView = [SIToastView showToastWithImage:[UIImage imageNamed:@"checkmark"] message:@"Job Done" duration:3 gravity:SIToastViewGravityBottom offset:30 mask:SIToastViewMaskSolid];
+    SIToastView *toastView = [SIToastView showToastWithImage:[UIImage imageNamed:@"checkmark"] message:@"Job Done" duration:3 gravity:SIToastViewGravityTop offset:0 mask:SIToastViewMaskSolid style:SIToastViewStyleBanner];
     toastView.tapHandler = ^(SIToastView *toastView) {
         [toastView dismiss];
     };

@@ -25,6 +25,11 @@ typedef NS_ENUM(NSInteger, SIToastViewMask) {
     SIToastViewMaskSolid
 };
 
+typedef NS_ENUM(NSInteger, SIToastViewStyle) {
+    SIToastViewStyleDefault = 0,
+    SIToastViewStyleBanner
+};
+
 @class SIToastView;
 typedef void(^SIToastViewHandler)(SIToastView *toastView);
 
@@ -44,6 +49,7 @@ typedef void(^SIToastViewHandler)(SIToastView *toastView);
 @property (nonatomic, assign) NSTimeInterval duration;
 
 @property (nonatomic, assign) SIToastViewGravity gravity; // default is SIToastViewGravityBottom
+@property (nonatomic, assign) SIToastViewStyle style; // default is SIToastViewStyleToast
 @property (nonatomic, assign) CGFloat offset; // default is 30.0
 
 @property (nonatomic, assign) SIToastViewMask mask; // default is SIToastViewMaskNone
@@ -63,17 +69,20 @@ typedef void(^SIToastViewHandler)(SIToastView *toastView);
 + (instancetype)showToastWithMessage:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity;
 + (instancetype)showToastWithMessage:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity offset:(CGFloat)offset;
 + (instancetype)showToastWithMessage:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity offset:(CGFloat)offset mask:(SIToastViewMask)mask;
++ (instancetype)showToastWithMessage:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity offset:(CGFloat)offset mask:(SIToastViewMask)mask style:(SIToastViewStyle)style;
 
 + (instancetype)showToastWithActivityAndMessage:(NSString *)message;
 + (instancetype)showToastWithActivityAndMessage:(NSString *)message gravity:(SIToastViewGravity)gravity;
 + (instancetype)showToastWithActivityAndMessage:(NSString *)message gravity:(SIToastViewGravity)gravity offset:(CGFloat)offset;
 + (instancetype)showToastWithActivityAndMessage:(NSString *)message gravity:(SIToastViewGravity)gravity offset:(CGFloat)offset mask:(SIToastViewMask)mask;
++ (instancetype)showToastWithActivityAndMessage:(NSString *)message gravity:(SIToastViewGravity)gravity offset:(CGFloat)offset mask:(SIToastViewMask)mask style:(SIToastViewStyle)style;
 
 + (instancetype)showToastWithImage:(UIImage *)image message:(NSString *)message;
 + (instancetype)showToastWithImage:(UIImage *)image message:(NSString *)message duration:(NSTimeInterval)duration;
 + (instancetype)showToastWithImage:(UIImage *)image message:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity;
 + (instancetype)showToastWithImage:(UIImage *)image message:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity offset:(CGFloat)offset;
 + (instancetype)showToastWithImage:(UIImage *)image message:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity offset:(CGFloat)offset mask:(SIToastViewMask)mask;
++ (instancetype)showToastWithImage:(UIImage *)image message:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity offset:(CGFloat)offset mask:(SIToastViewMask)mask style:(SIToastViewStyle)style;
 
 + (NSArray *)visibleToastViews;
 + (BOOL)isShowingToastView;
@@ -83,17 +92,20 @@ typedef void(^SIToastViewHandler)(SIToastView *toastView);
 - (void)showMessage:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity;
 - (void)showMessage:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity offset:(CGFloat)offset;
 - (void)showMessage:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity offset:(CGFloat)offset mask:(SIToastViewMask)mask;
+- (void)showMessage:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity offset:(CGFloat)offset mask:(SIToastViewMask)mask style:(SIToastViewStyle)style;
 
 - (void)showActivityWithMessage:(NSString *)message;
 - (void)showActivityWithMessage:(NSString *)message gravity:(SIToastViewGravity)gravity;
 - (void)showActivityWithMessage:(NSString *)message gravity:(SIToastViewGravity)gravity offset:(CGFloat)offset;
 - (void)showActivityWithMessage:(NSString *)message gravity:(SIToastViewGravity)gravity offset:(CGFloat)offset mask:(SIToastViewMask)mask;
+- (void)showActivityWithMessage:(NSString *)message gravity:(SIToastViewGravity)gravity offset:(CGFloat)offset mask:(SIToastViewMask)mask style:(SIToastViewStyle)style;
 
 - (void)showImage:(UIImage *)image message:(NSString *)message;
 - (void)showImage:(UIImage *)image message:(NSString *)message duration:(NSTimeInterval)duration;
 - (void)showImage:(UIImage *)image message:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity;
 - (void)showImage:(UIImage *)image message:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity offset:(CGFloat)offset;
 - (void)showImage:(UIImage *)image message:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity offset:(CGFloat)offset mask:(SIToastViewMask)mask;
+- (void)showImage:(UIImage *)image message:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity offset:(CGFloat)offset mask:(SIToastViewMask)mask style:(SIToastViewStyle)style;
 
 - (void)show;
 - (void)dismiss;
