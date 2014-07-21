@@ -514,7 +514,7 @@ static NSMutableArray *__si_visible_toast_views;
     }
     
     CGFloat width = left + horizontalPadding;
-    height += verticalPadding * (self.style == SIToastViewStyleDefault ? 2 : 4);
+    height += verticalPadding * (self.style == SIToastViewStyleDefault ? 2 : 3);
     
     if (self.activityIndicatorView) {
         [self setY:round((height - self.activityIndicatorView.bounds.size.height) / 2) forView:self.activityIndicatorView];
