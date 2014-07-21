@@ -83,7 +83,26 @@
 //    };
 //    [toastView showMessage:@"text 2" duration:2 gravity:SIToastViewGravityTop];
     
-    [SIToastView showToastWithImage:[UIImage imageNamed:@"checkmark"] message:@"Job Done" duration:3];
+//    [SIToastView showToastWithImage:[UIImage imageNamed:@"checkmark"] message:@"Job Done" duration:3];
+    
+    
+    [SIToastView showToastWithMessage:@"Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Vestibulum id ligula porta felis euismod semper. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Maecenas sed diam eget risus varius blandit sit amet non magna. Vestibulum id ligula porta felis euismod semper."
+                    duration:2
+                     gravity:SIToastViewGravityBottom
+                       style:SIToastViewStyleBanner
+                      offset:30];
+    
+//    [SIToastView showToastWithActivityAndMessage:@"Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Vestibulum id ligula porta felis euismod semper. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Maecenas sed diam eget risus varius blandit sit amet non magna. Vestibulum id ligula porta felis euismod semper."
+//                                         gravity:SIToastViewGravityBottom
+//                                           style:SIToastViewStyleBanner
+//                                          offset:0];
+    
+//    [SIToastView showToastWithImage:[UIImage imageNamed:@"checkmark"]
+//                            message:@"Vivamus sagittis lacus ve"
+//                           duration:2
+//                            gravity:SIToastViewGravityBottom
+//                              style:SIToastViewStyleBanner
+//                             offset:30];
 }
 
 - (IBAction)show2:(id)sender

@@ -10,7 +10,7 @@
 #import <QuartzCore/QuartzCore.h>
 
 #define PADDING_HORIZONTAL 10
-#define PADDING_VERTICAL 8
+#define PADDING_VERTICAL (self.style == SIToastViewStyleToast ? 8 : 16)
 #define MARGIN 10
 #define GAP 10
 #define TRANSITION_DURATION 0.3
@@ -99,6 +99,13 @@ static NSMutableArray *__si_visible_toast_views;
     return view;
 }
 
++ (SIToastView *)showToastWithMessage:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity style:(SIToastViewStyle)style offset:(CGFloat)offset
+{
+    SIToastView *view = [[self alloc] init];
+    [view showMessage:message duration:duration gravity:gravity style:style offset:offset];
+    return view;
+}
+
 + (SIToastView *)showToastWithActivityAndMessage:(NSString *)message
 {
     SIToastView *view = [[self alloc] init];
@@ -117,6 +124,13 @@ static NSMutableArray *__si_visible_toast_views;
 {
     SIToastView *view = [[self alloc] init];
     [view showActivityWithMessage:message gravity:gravity offset:offset];
+    return view;
+}
+
++ (SIToastView *)showToastWithActivityAndMessage:(NSString *)message gravity:(SIToastViewGravity)gravity style:(SIToastViewStyle)style offset:(CGFloat)offset
+{
+    SIToastView *view = [[self alloc] init];
+    [view showActivityWithMessage:message gravity:gravity style:style offset:offset];
     return view;
 }
 
@@ -145,6 +159,13 @@ static NSMutableArray *__si_visible_toast_views;
 {
     SIToastView *view = [[self alloc] init];
     [view showImage:image message:message duration:duration gravity:gravity offset:offset];
+    return view;
+}
+
++ (SIToastView *)showToastWithImage:(UIImage *)image message:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity style:(SIToastViewStyle)style offset:(CGFloat)offset
+{
+    SIToastView *view = [[self alloc] init];
+    [view showImage:image message:message duration:duration gravity:gravity style:style offset:offset];
     return view;
 }
 
@@ -290,11 +311,17 @@ static NSMutableArray *__si_visible_toast_views;
 
 - (void)showMessage:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity offset:(CGFloat)offset
 {
+    [self showMessage:message duration:duration gravity:gravity style:SIToastViewStyleToast offset:offset];
+}
+
+- (void)showMessage:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity style:(SIToastViewStyle)style offset:(CGFloat)offset
+{
     _message = message;
     _duration = duration;
     _showsActivity = NO;
     _image = nil;
     _gravity = gravity;
+    _style = style;
     _offset = offset;
     
     [self show];
@@ -312,11 +339,17 @@ static NSMutableArray *__si_visible_toast_views;
 
 - (void)showActivityWithMessage:(NSString *)message gravity:(SIToastViewGravity)gravity offset:(CGFloat)offset
 {
+    [self showActivityWithMessage:message gravity:gravity style:SIToastViewStyleToast offset:offset];
+}
+
+- (void)showActivityWithMessage:(NSString *)message gravity:(SIToastViewGravity)gravity style:(SIToastViewStyle)style offset:(CGFloat)offset
+{
     _message = message;
     _duration = 0;
     _showsActivity = YES;
     _image = nil;
     _gravity = gravity;
+    _style = style;
     _offset = offset;
     
     [self show];
@@ -339,11 +372,17 @@ static NSMutableArray *__si_visible_toast_views;
 
 - (void)showImage:(UIImage *)image message:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity offset:(CGFloat)offset
 {
+    [self showImage:image message:message duration:duration gravity:gravity style:SIToastViewStyleToast offset:offset];
+}
+
+- (void)showImage:(UIImage *)image message:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity style:(SIToastViewStyle)style offset:(CGFloat)offset
+{
     _message = message;
     _duration = duration;
     _showsActivity = NO;
     _image = image;
     _gravity = gravity;
+    _style = style;
     _offset = offset;
     
     [self show];
@@ -388,6 +427,9 @@ static NSMutableArray *__si_visible_toast_views;
         rect.size.width = maxMessageWidth;
         self.messageLabel.frame = rect;
         [self.messageLabel sizeToFit];
+        if (self.style == SIToastViewStyleBanner) {
+            [self setWidth:maxMessageWidth + 2 * PADDING_HORIZONTAL forView:self.messageLabel];
+        }
         left += self.messageLabel.frame.size.width;
         height = MAX(height, self.messageLabel.bounds.size.height);
     }
@@ -407,8 +449,11 @@ static NSMutableArray *__si_visible_toast_views;
         [self setY:round((height - self.messageLabel.bounds.size.height) / 2) forView:self.messageLabel];
     }
     
-    CGFloat x = round((self.bounds.size.width - width) / 2);
-    CGFloat y = self.gravity == SIToastViewGravityBottom ? (self.bounds.size.height - height - self.offset) : self.offset;
+    CGFloat x = 0, y = 0;
+    if (self.style == SIToastViewStyleToast) {
+        x = round((self.bounds.size.width - width) / 2);
+    }
+    y = self.gravity == SIToastViewGravityBottom ? (self.bounds.size.height - height - self.offset) : self.offset;
     self.containerView.frame = CGRectMake(x, y, width, height);
     self.containerView.layer.shadowPath = [UIBezierPath bezierPathWithRoundedRect:self.containerView.bounds cornerRadius:self.cornerRadius].CGPath;
 }
@@ -423,6 +468,13 @@ static NSMutableArray *__si_visible_toast_views;
 {
     CGRect rect = view.frame;
     rect.origin.y = y;
+    view.frame = rect;
+}
+
+- (void)setWidth:(CGFloat)width forView:(UIView *)view
+{
+    CGRect rect = view.frame;
+    rect.size.width = width;
     view.frame = rect;
 }
 
