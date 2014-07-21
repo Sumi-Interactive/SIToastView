@@ -17,6 +17,11 @@ typedef NS_ENUM(NSInteger, SIToastViewGravity) {
     SIToastViewGravityTop,
 };
 
+typedef NS_ENUM(NSInteger, SIToastViewStyle) {
+    SIToastViewStyleDefault = 0,
+    SIToastViewStyleBanner
+};
+
 @class SIToastView;
 typedef void(^SIToastViewHandler)(SIToastView *toastView);
 
@@ -35,6 +40,7 @@ typedef void(^SIToastViewHandler)(SIToastView *toastView);
 @property (nonatomic, assign) NSTimeInterval duration;
 
 @property (nonatomic, assign) SIToastViewGravity gravity; // default is SIToastViewGravityBottom
+@property (nonatomic, assign) SIToastViewStyle style; // default is SIToastViewStyleToast
 @property (nonatomic, assign) CGFloat offset; // default is 30.0
 
 @property (nonatomic, readonly, getter = isVisible) BOOL visible;
@@ -50,15 +56,18 @@ typedef void(^SIToastViewHandler)(SIToastView *toastView);
 + (SIToastView *)showToastWithMessage:(NSString *)message duration:(NSTimeInterval)duration;
 + (SIToastView *)showToastWithMessage:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity;
 + (SIToastView *)showToastWithMessage:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity offset:(CGFloat)offset;
++ (SIToastView *)showToastWithMessage:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity style:(SIToastViewStyle)style offset:(CGFloat)offset;
 
 + (SIToastView *)showToastWithActivityAndMessage:(NSString *)message;
 + (SIToastView *)showToastWithActivityAndMessage:(NSString *)message gravity:(SIToastViewGravity)gravity;
 + (SIToastView *)showToastWithActivityAndMessage:(NSString *)message gravity:(SIToastViewGravity)gravity offset:(CGFloat)offset;
++ (SIToastView *)showToastWithActivityAndMessage:(NSString *)message gravity:(SIToastViewGravity)gravity style:(SIToastViewStyle)style offset:(CGFloat)offset;
 
 + (SIToastView *)showToastWithImage:(UIImage *)image message:(NSString *)message;
 + (SIToastView *)showToastWithImage:(UIImage *)image message:(NSString *)message duration:(NSTimeInterval)duration;
 + (SIToastView *)showToastWithImage:(UIImage *)image message:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity;
 + (SIToastView *)showToastWithImage:(UIImage *)image message:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity offset:(CGFloat)offset;
++ (SIToastView *)showToastWithImage:(UIImage *)image message:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity style:(SIToastViewStyle)style offset:(CGFloat)offset;
 
 + (NSArray *)visibleToastViews;
 + (BOOL)isShowingToastView;
@@ -67,10 +76,12 @@ typedef void(^SIToastViewHandler)(SIToastView *toastView);
 - (void)showMessage:(NSString *)message duration:(NSTimeInterval)duration;
 - (void)showMessage:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity;
 - (void)showMessage:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity offset:(CGFloat)offset;
+- (void)showMessage:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity style:(SIToastViewStyle)style offset:(CGFloat)offset;
 
 - (void)showActivityWithMessage:(NSString *)message;
 - (void)showActivityWithMessage:(NSString *)message gravity:(SIToastViewGravity)gravity;
 - (void)showActivityWithMessage:(NSString *)message gravity:(SIToastViewGravity)gravity offset:(CGFloat)offset;
+- (void)showActivityWithMessage:(NSString *)message gravity:(SIToastViewGravity)gravity style:(SIToastViewStyle)style offset:(CGFloat)offset;
 
 - (void)showImage:(UIImage *)image message:(NSString *)message;
 - (void)showImage:(UIImage *)image message:(NSString *)message duration:(NSTimeInterval)duration;
