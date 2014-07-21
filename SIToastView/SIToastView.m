@@ -10,7 +10,6 @@
 #import <QuartzCore/QuartzCore.h>
 
 #define PADDING_HORIZONTAL 10
-#define PADDING_VERTICAL (self.style == SIToastViewStyleToast ? 8 : 16)
 #define MARGIN 10
 #define GAP 10
 #define TRANSITION_DURATION 0.3
@@ -263,6 +262,18 @@ static NSMutableArray *__si_visible_toast_views;
     }
 }
 
+- (void)setStyle:(SIToastViewStyle)style
+{
+    if (_style == style) {
+        return;
+    }
+    
+    _style = style;
+    if (self.isVisible) {
+        [self setNeedsLayout];
+    }
+}
+
 - (void)setOffset:(CGFloat)offset
 {
     if (_offset == offset) {
@@ -311,7 +322,7 @@ static NSMutableArray *__si_visible_toast_views;
 
 - (void)showMessage:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity offset:(CGFloat)offset
 {
-    [self showMessage:message duration:duration gravity:gravity style:SIToastViewStyleToast offset:offset];
+    [self showMessage:message duration:duration gravity:gravity style:SIToastViewStyleDefault offset:offset];
 }
 
 - (void)showMessage:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity style:(SIToastViewStyle)style offset:(CGFloat)offset
@@ -339,7 +350,7 @@ static NSMutableArray *__si_visible_toast_views;
 
 - (void)showActivityWithMessage:(NSString *)message gravity:(SIToastViewGravity)gravity offset:(CGFloat)offset
 {
-    [self showActivityWithMessage:message gravity:gravity style:SIToastViewStyleToast offset:offset];
+    [self showActivityWithMessage:message gravity:gravity style:SIToastViewStyleDefault offset:offset];
 }
 
 - (void)showActivityWithMessage:(NSString *)message gravity:(SIToastViewGravity)gravity style:(SIToastViewStyle)style offset:(CGFloat)offset
@@ -372,7 +383,7 @@ static NSMutableArray *__si_visible_toast_views;
 
 - (void)showImage:(UIImage *)image message:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity offset:(CGFloat)offset
 {
-    [self showImage:image message:message duration:duration gravity:gravity style:SIToastViewStyleToast offset:offset];
+    [self showImage:image message:message duration:duration gravity:gravity style:SIToastViewStyleDefault offset:offset];
 }
 
 - (void)showImage:(UIImage *)image message:(NSString *)message duration:(NSTimeInterval)duration gravity:(SIToastViewGravity)gravity style:(SIToastViewStyle)style offset:(CGFloat)offset
@@ -435,7 +446,7 @@ static NSMutableArray *__si_visible_toast_views;
     }
     
     CGFloat width = left + PADDING_HORIZONTAL;
-    height += PADDING_VERTICAL * 2;
+    height += self.paddingVertical * 2;
     
     if (self.activityIndicatorView) {
         [self setY:round((height - self.activityIndicatorView.bounds.size.height) / 2) forView:self.activityIndicatorView];
@@ -450,7 +461,7 @@ static NSMutableArray *__si_visible_toast_views;
     }
     
     CGFloat x = 0, y = 0;
-    if (self.style == SIToastViewStyleToast) {
+    if (self.style == SIToastViewStyleDefault) {
         x = round((self.bounds.size.width - width) / 2);
     }
     y = self.gravity == SIToastViewGravityBottom ? (self.bounds.size.height - height - self.offset) : self.offset;
@@ -476,6 +487,11 @@ static NSMutableArray *__si_visible_toast_views;
     CGRect rect = view.frame;
     rect.size.width = width;
     view.frame = rect;
+}
+
+- (CGFloat)paddingVertical
+{
+    return self.style == SIToastViewStyleDefault ? 8 : 16;
 }
 
 #pragma mark - Private

@@ -18,7 +18,7 @@ typedef NS_ENUM(NSInteger, SIToastViewGravity) {
 };
 
 typedef NS_ENUM(NSInteger, SIToastViewStyle) {
-    SIToastViewStyleToast = 0,
+    SIToastViewStyleDefault = 0,
     SIToastViewStyleBanner
 };
 
