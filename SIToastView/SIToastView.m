@@ -505,10 +505,10 @@ static NSMutableArray *__si_visible_toast_views;
         rect.origin.x = left;
         rect.size.width = maxMessageWidth;
         self.messageLabel.frame = rect;
-        [self.messageLabel sizeToFit];
         if (self.style == SIToastViewStyleBanner) {
             [self setWidth:maxMessageWidth + 2 * horizontalPadding forView:self.messageLabel];
         }
+        [self.messageLabel sizeToFit];
         left += self.messageLabel.frame.size.width;
         height = MAX(height, self.messageLabel.bounds.size.height);
     }
