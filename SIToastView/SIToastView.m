@@ -676,6 +676,7 @@ static NSMutableArray *__si_visible_toast_views;
     SIToastViewController *viewController = [[SIToastViewController alloc] init];
     viewController.extendedLayoutIncludesOpaqueBars = YES;
     viewController.toastView = self;
+    [viewController.view layoutIfNeeded];
     
     UIWindow *window = [[SIToastWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     window.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
