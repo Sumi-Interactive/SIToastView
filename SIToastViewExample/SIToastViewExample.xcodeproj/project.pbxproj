@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		493AE02E568046B5934F226C /* libPods-SIToastViewExample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F0B194832B84B6FB5A776CE /* libPods-SIToastViewExample.a */; };
 		7E4B633B176EF4DA00C93DF1 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E4B633A176EF4DA00C93DF1 /* QuartzCore.framework */; };
 		7E5DBCB11771B9E80004C9FE /* checkmark.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E5DBCAF1771B9E80004C9FE /* checkmark.png */; };
 		7E5DBCB21771B9E80004C9FE /* checkmark@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E5DBCB01771B9E80004C9FE /* checkmark@2x.png */; };
@@ -26,12 +27,11 @@
 		7E6A7B5A176B280E0082D730 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E6A7B59176B280E0082D730 /* Icon@2x.png */; };
 		7E6A7B5C176B28120082D730 /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E6A7B5B176B28120082D730 /* Icon-72.png */; };
 		7E6A7B5E176B28150082D730 /* Icon-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E6A7B5D176B28150082D730 /* Icon-72@2x.png */; };
-		7E6A7B67176B28970082D730 /* SIToastView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E6A7B66176B28970082D730 /* SIToastView.m */; };
-		7EEEF667182E2AA500170E3A /* UIWindow+SIUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EEEF666182E2AA500170E3A /* UIWindow+SIUtils.m */; };
-		7EEEF66A182E2AFF00170E3A /* SISecondaryWindowRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EEEF669182E2AFF00170E3A /* SISecondaryWindowRootViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0F0B194832B84B6FB5A776CE /* libPods-SIToastViewExample.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SIToastViewExample.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		73B220E9BA524810BAF32EC6 /* Pods-SIToastViewExample.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SIToastViewExample.xcconfig"; path = "Pods/Pods-SIToastViewExample.xcconfig"; sourceTree = "<group>"; };
 		7E4B633A176EF4DA00C93DF1 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		7E5DBCAF1771B9E80004C9FE /* checkmark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = checkmark.png; sourceTree = "<group>"; };
 		7E5DBCB01771B9E80004C9FE /* checkmark@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "checkmark@2x.png"; sourceTree = "<group>"; };
@@ -56,12 +56,6 @@
 		7E6A7B59176B280E0082D730 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
 		7E6A7B5B176B28120082D730 /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72.png"; sourceTree = "<group>"; };
 		7E6A7B5D176B28150082D730 /* Icon-72@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72@2x.png"; sourceTree = "<group>"; };
-		7E6A7B65176B28970082D730 /* SIToastView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SIToastView.h; sourceTree = "<group>"; };
-		7E6A7B66176B28970082D730 /* SIToastView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SIToastView.m; sourceTree = "<group>"; };
-		7EEEF665182E2AA500170E3A /* UIWindow+SIUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIWindow+SIUtils.h"; sourceTree = "<group>"; };
-		7EEEF666182E2AA500170E3A /* UIWindow+SIUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIWindow+SIUtils.m"; sourceTree = "<group>"; };
-		7EEEF668182E2AFF00170E3A /* SISecondaryWindowRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SISecondaryWindowRootViewController.h; sourceTree = "<group>"; };
-		7EEEF669182E2AFF00170E3A /* SISecondaryWindowRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SISecondaryWindowRootViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -73,6 +67,7 @@
 				7E6A7B32176B27DA0082D730 /* UIKit.framework in Frameworks */,
 				7E6A7B34176B27DA0082D730 /* Foundation.framework in Frameworks */,
 				7E6A7B36176B27DA0082D730 /* CoreGraphics.framework in Frameworks */,
+				493AE02E568046B5934F226C /* libPods-SIToastViewExample.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -91,10 +86,10 @@
 		7E6A7B25176B27DA0082D730 = {
 			isa = PBXGroup;
 			children = (
-				7E6A7B62176B287A0082D730 /* SIToastView */,
 				7E6A7B37176B27DA0082D730 /* SIToastViewExample */,
 				7E6A7B30176B27DA0082D730 /* Frameworks */,
 				7E6A7B2F176B27DA0082D730 /* Products */,
+				73B220E9BA524810BAF32EC6 /* Pods-SIToastViewExample.xcconfig */,
 			);
 			sourceTree = "<group>";
 		};
@@ -113,6 +108,7 @@
 				7E6A7B31176B27DA0082D730 /* UIKit.framework */,
 				7E6A7B33176B27DA0082D730 /* Foundation.framework */,
 				7E6A7B35176B27DA0082D730 /* CoreGraphics.framework */,
+				0F0B194832B84B6FB5A776CE /* libPods-SIToastViewExample.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -175,20 +171,6 @@
 			name = UI;
 			sourceTree = "<group>";
 		};
-		7E6A7B62176B287A0082D730 /* SIToastView */ = {
-			isa = PBXGroup;
-			children = (
-				7E6A7B65176B28970082D730 /* SIToastView.h */,
-				7E6A7B66176B28970082D730 /* SIToastView.m */,
-				7EEEF665182E2AA500170E3A /* UIWindow+SIUtils.h */,
-				7EEEF666182E2AA500170E3A /* UIWindow+SIUtils.m */,
-				7EEEF668182E2AFF00170E3A /* SISecondaryWindowRootViewController.h */,
-				7EEEF669182E2AFF00170E3A /* SISecondaryWindowRootViewController.m */,
-			);
-			name = SIToastView;
-			path = ../SIToastView;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -196,9 +178,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 7E6A7B54176B27DA0082D730 /* Build configuration list for PBXNativeTarget "SIToastViewExample" */;
 			buildPhases = (
+				3E5706F7E146431DB3757AA6 /* Check Pods Manifest.lock */,
 				7E6A7B2A176B27DA0082D730 /* Sources */,
 				7E6A7B2B176B27DA0082D730 /* Frameworks */,
 				7E6A7B2C176B27DA0082D730 /* Resources */,
+				F6D7EC2C6D3A4D409E4A26F7 /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -257,6 +241,39 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		3E5706F7E146431DB3757AA6 /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		F6D7EC2C6D3A4D409E4A26F7 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Pods-SIToastViewExample-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		7E6A7B2A176B27DA0082D730 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -265,9 +282,6 @@
 				7E6A7B3E176B27DA0082D730 /* main.m in Sources */,
 				7E6A7B42176B27DA0082D730 /* AppDelegate.m in Sources */,
 				7E6A7B51176B27DA0082D730 /* ViewController.m in Sources */,
-				7EEEF66A182E2AFF00170E3A /* SISecondaryWindowRootViewController.m in Sources */,
-				7E6A7B67176B28970082D730 /* SIToastView.m in Sources */,
-				7EEEF667182E2AA500170E3A /* UIWindow+SIUtils.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -361,6 +375,7 @@
 		};
 		7E6A7B55176B27DA0082D730 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 73B220E9BA524810BAF32EC6 /* Pods-SIToastViewExample.xcconfig */;
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SIToastViewExample/SIToastViewExample-Prefix.pch";
@@ -372,6 +387,7 @@
 		};
 		7E6A7B56176B27DA0082D730 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 73B220E9BA524810BAF32EC6 /* Pods-SIToastViewExample.xcconfig */;
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SIToastViewExample/SIToastViewExample-Prefix.pch";

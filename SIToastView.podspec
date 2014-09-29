@@ -14,4 +14,5 @@ Pod::Spec.new do |s|
   s.requires_arc = true
   s.framework    = 'QuartzCore'
   s.source_files = 'SIToastView/*.{h,m}'
+  s.dependency 'SIBaseKit', '~> 0.1.0'
 end

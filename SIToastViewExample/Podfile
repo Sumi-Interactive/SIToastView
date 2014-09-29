@@ -1,0 +1,3 @@
+target 'SIToastViewExample', :exclusive => true do
+  pod "SIToastView", :path => "../"
+end
