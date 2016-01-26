@@ -673,22 +673,20 @@ static NSMutableArray *__si_visible_toast_views;
 
 - (void)setupWindow
 {
-    SIToastViewController *viewController = [[SIToastViewController alloc] init];
-    viewController.extendedLayoutIncludesOpaqueBars = YES;
-    viewController.toastView = self;
-    [viewController.view layoutIfNeeded];
-    
-    UIWindow *window = [[SIToastWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    SIToastWindow *window = [[SIToastWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     window.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     window.opaque = NO;
     window.windowLevel = UIWindowLevelStatusBar + [UIApplication sharedApplication].windows.count;
-//    window.userInteractionEnabled = NO;
-    window.rootViewController = viewController;
-    self.toastWindow = (SIToastWindow *)window;
+    self.toastWindow = window;
     
-//    UIWindow *oldKeyWindow = [UIApplication sharedApplication].keyWindow;
+    SIToastViewController *viewController = [[SIToastViewController alloc] init];
+    viewController.extendedLayoutIncludesOpaqueBars = YES;
+    viewController.toastView = self;
+    
+    self.toastWindow.rootViewController = viewController;
     self.toastWindow.hidden = NO;
-//    [oldKeyWindow makeKeyWindow];
+    
+    [viewController.view layoutIfNeeded];
 }
 
 - (void)transitionIn
